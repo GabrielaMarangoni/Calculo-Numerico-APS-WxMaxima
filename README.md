@@ -1,1 +1,1 @@
-# Calculo-Num-rico-APS
+# Calculo-Numerico-APS-WxMaxima
