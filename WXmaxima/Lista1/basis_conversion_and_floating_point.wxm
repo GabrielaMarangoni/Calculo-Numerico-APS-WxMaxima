@@ -1,0 +1,329 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 18.02.0 ] */
+/* [wxMaxima: comment start ]
+Universidade Tecnológica Federal do Paraná
+Professor: Wellington José Corrêa
+Orientando: Daniel Venturini
+Cálculo Numérico
+Conversão de Bases e Aritmética de Ponto Flutuante
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: title   start ]
+Conversão de Base e Aritmética de Ponto Flutuante
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Neste tutorial, assim como em todos os demais, faremos uso do arquivo do pacote denominado floating_point.mac que contém os algoritmos solicitados abaixo.
+Para tanto, vá em Arquivo, carregar pacote... e procure pelo arquivo
+floating_point.mac.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+kill(all);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("/home/welljc/Dropbox/tex/Cálculo numérico/métodos prontos/Conversão de Base e Aritmética de Ponto Flutuante/floating_point.mac")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Conversão de base
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Conversão de base decimal para base binária.
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+a)Parte inteira: Usaremos o comando 
+dectobinDecimal(x) onde x é o número inteiro na base 10.
+
+
+Exemplo: Converta o número 42 na base 2.
+
+Solução: Fazendo uso do comando acima, temos que 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+dectobinDecimal(42);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Assim, (42)_2=101010.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+(b) Parte decimal: Usaremos o comando
+dectobinFracionario(x) onde x é o número fracionário na base 10.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Exemplo: Converta o número 8,7 na base 2.
+Solução: Recorrendo ao comando acima, temos:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+dectobinFracionario(8,7);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Portanto, (8,7)_2 ~ 1000,1011.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Conversão de base binária para a base decimal.
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Como na seção anterior, dividiremos em duas partes.
+
+(a) Parte inteira:
+
+Nesta situação, usaremos o comando 
+
+bintodec(y) de modo que y é o número na base 2.
+
+
+Exemplo: Converta o número 101010 na base decimal.
+
+Solução: 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+bintodecDecimal(101010);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Portanto, (101010)_10=42.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+(b) Parte fracionária:
+
+Exemplo: Converta o número 1000,1011 na base decimal.
+
+Solução: recorrendo ao comando dado acima, resulta que 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+bintodecFracionario(1000,1011);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Portanto, (1000,1011)_10 ~ 8,7.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Conversão de base decimal para base hexadecimal
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+a)Parte inteira: Usaremos o comando 
+dectohex(x) onde x é o número inteiro na base 10.
+Exemplo: Converta o número 16435930 na base hexadecimal.
+Solução: Fazendo uso do comando acima, temos que 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+dectohex(16435930);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+(b) Parte decimal: Usaremos o comando
+dectohexF(x) onde x é o número fracionário na base 10.
+
+Exemplo: Converta o número 15.15 na base hexadecimal.
+Solução: Pelo que foi apresentado acima, temos:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+dectohexF(15,15);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Conversão de base hexadecimal para base decimal
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Neste caso, basta usar o comando hexstring2int("x") onde x é o número na base hexadecimal.
+
+Exemplo: Converta o número hexadecimal "FACADA" na base decimal.
+Solução: De fato, temos que
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+hexstring2int("FACADA");
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Conversão de base decimal para base octadecimal
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Neste caso, basta usar o comando dectoOct(x), onde x é o número na base 10.
+
+Exemplo: Converta o número 1051 na base octadecimal.
+Solução: Note que
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+dectoOct(1051);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Conversão de base octadecimal para base decimal
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Neste caso, basta usar o comando octtoDec(x), onde x é o número na base 10.
+
+Exemplo: Converta o número 2033 na base 10.
+Solução: Observe que 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+octtoDec(2033);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Aritmética de Ponto Flutuante
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Erro absoluto e relativo
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+No que segue, denotaremos a aproximação de p por p1.
+Usaremos os comandos:
+
+Erro absoluto: ea(p,p1)$
+
+Erro relativo: er(p,p1)$
+
+Exemplo: Determine o erro absoluto e o erro relativo na aproximação de p= 2^(1/2)por p1=1,41.
+
+Solução: Tendo em mente os comandos acima, temos:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ea(sqrt(2),1.41);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+er(sqrt(2),1.41);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Truncamento e Arredondamento
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Para tanto, denotemos por “num” o número a ser digitado e “alg” o número de algarismos a ser estabelecido pelo truncamento 
+e arredondamento. Temos os seguintes comandos:
+
+(i) Truncamento: trunc(num,alg)$
+(ii) Arredondamento: arred(num,alg)$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Exemplo: Realize a aritmética de truncamento com três algarismos para o número 1.23675.
+
+Solução: De fato, empregando o comando acima, obtemos que:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+trunc(1.23675,3)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Exemplo: Empregue a aritmética de arredondamento com três algarismos para os números 3,2365 e 3,2344.
+
+Solução: Com efeito, mediante o comando arred(num,alg) dado acima, temos o almejado:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+arred(3.2365,3); arred(3.2344,3);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Veja que os números acima terminaram em "b0". Os números em ponto flutuante sempre terminam com "b" seguido de um número  que indica que devemos multiplicar por  10^n. Assim, por exemplo, 3.23b0=3.23 X 10^0=3.23.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: subsect start ]
+Representação Numérica de Ponto Flutuante
+   [wxMaxima: subsect end   ] */
+
+
+/* [wxMaxima: comment start ]
+Usaremos o comando Represenbin(t,emin,emax) onde t é o número de dígitos, emin e emax são os extremos do intervalo fechado emin ≤ e ≤ emax para determinar na base 2, menor e o maior valor positivo que este computador representa e ainda, o número total de elementos representáveis.
+                                 
+Exemplo:Considere um computador hipotético com dois dígitos p = 2, base B = 2 e
+expoente na faixa -1 ≤ e ≤ 2. Determine o menor e o maior valor positivo que este computador representa e ainda, o número total de elementos representáveis.
+
+Solução:
+
+Temos que 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Represenbin(2,-1,2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 18.02.0"$

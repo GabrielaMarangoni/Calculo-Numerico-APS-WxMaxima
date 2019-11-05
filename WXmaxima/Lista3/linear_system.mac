@@ -1,0 +1,795 @@
+
+Cholesky(A,B):=block(n : length (A),
+
+[vals, vecs] : eigenvectors (A),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+
+for i thru length (vals[1]) do  (val[i] :vals[1][i],
+
+  mult[i] = vals[2][i], vec[i] = vecs[i]),
+
+D:eigenvalues(A),
+
+E:D[1],
+
+C:create_list(E[k],k,1,length(vals[1])),
+
+
+
+smallest_matrix_element(m) := lmin(map('lmin, (args(m)))),
+
+
+
+if is((smallest_matrix_element(list(C)))<0) then 
+
+(print(" A não é positiva definida e o método não é válido") ,return(false)),
+
+C:A-transpose(A),
+
+if (C#zeromatrix(rank(A),rank(A))) then ( print("A não é simétrica e assim, o método não é válido"),return(false)),
+
+cholesky (A):= block
+
+
+
+
+
+
+
+   ([
+
+
+
+    L : copymatrix (A),
+
+
+
+    p : makelist (0, i, 1, length (A))],
+
+
+
+
+
+
+
+    for i thru n do
+
+
+
+        for j : i thru n do
+
+
+
+           (x : L[i, j],
+
+
+
+            x : x - sum (L[j, k] * L[i, k], k, 1, i - 1),
+
+
+
+            if i = j then
+
+
+
+                p[i] : 1 / sqrt(x)
+
+
+
+            else
+
+
+
+                L[j, i] : x * p[i]),
+
+
+
+
+
+
+
+    for i thru n do
+
+
+
+        L[i, i] : 1 / p[i],
+
+
+
+
+
+
+
+    for i thru n do
+
+
+
+        for j : i + 1 thru n do
+
+
+
+            L[i, j] : 0,
+
+    L),
+
+'G=G:cholesky(A),
+
+print("Decomposição de Cholesky é a matriz        G = ",G),
+
+n:length(A), solY:zeromatrix(n,1),
+
+for i:1 thru n do (
+
+    som:0,
+
+    for j:1 thru i-1 do (
+
+        som:som + solY[j,1]*G[i,j]
+
+    ),
+
+    solY[i,1]:(B[1,i]-som)/G[i,i]
+
+),
+
+print(" Solução do sistema triangular inferior G*Y=B é                  Y = ",solY),
+
+sol:zeromatrix(n,1),
+
+for i:n step -1 thru 1 do (
+
+    suma:0,
+
+    for k:i+1 thru n do (
+
+        suma:suma + sol[k,1]*G[k,i]
+
+    ),
+
+    sol[i,1]:(solY[i,1]-suma)/G[i,i]
+
+),
+
+print(" Solução do sistema triangular superior U*X=Y é X = ",box(sol))
+
+)$
+
+LU(A,B):=block(kill(K,S),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+K[i,j]:=A[i,j],
+for i:1 thru length(A)-1 do (S[i]:genmatrix(K,i,i),
+if is(determinant(S[i])=0) then print("O menor principal"," ", S[i], "", "tem determinante nulo.")),
+L:create_list(determinant(S[i]),i,1,length(A)-1),
+smallest_matrix_element(m) := lmin(map('lmin, (args(m)))),
+if is(smallest_matrix_element(list(L))=0) then ( print("Portanto o método de decomposição LU não é válido"),return(false)),
+n:length(A),
+
+L:zeromatrix(n,n),
+
+U:zeromatrix(n,n),
+
+for k:1 thru n do (
+
+    for j:k thru n do (
+
+        soma:0,
+
+        for p:1 thru k-1 do (
+
+            soma: soma + L[k,p]*U[p,j]
+
+        ),
+
+        U[k,j]:A[k,j]-soma
+
+    ),
+
+    L[k,k]:1,
+
+    for i:k+1 thru n do(
+
+        soma:0,
+
+        for p:1 thru k-1 do (
+
+            soma: soma + L[i,p]*U[p,k]
+
+        ),
+
+        L[i,k]:(A[i,k]-soma)/U[k,k]    
+
+    )
+
+),
+
+print("       Fatorização A=L*U  ==>   L=",L,"",",   U=",U,"",",   LU=",L.U),
+
+solY:zeromatrix(n,1),
+
+for i:1 thru n do (
+
+    soma:0,
+
+    for k:1 thru i-1 do (
+
+        soma:soma + solY[k,1]*L[i,k]
+
+    ),
+
+    solY[i,1]:(B[1,i]-soma)
+
+),
+
+print("Solução do sistema triangular inferior L*Y=B é Y = ",solY),
+
+sol:zeromatrix(n,1),
+
+for i:n step -1 thru 1 do (
+
+    suma:0,
+
+    for k:i+1 thru n do (
+
+        suma:suma + sol[k,1]*U[i,k]
+
+    ),
+
+    sol[i,1]:(solY[i,1]-suma)/U[i,i]
+
+),
+
+print("Solução do sistema triangular superior U*X=Y é X = ",box(sol))
+
+)$
+
+Gauss_parcial(A,B):=block([n,MA],
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+n:length(A),
+
+MA:addcol(A,B),
+
+for j:1 thru n-1 do (
+
+
+
+  /*Determinamos o pivô */
+
+
+
+  pivo:j,  
+
+  for i:j+1 thru n do (
+
+    if abs(MA[i,j])>abs(MA[pivo,j]) then (
+
+       pivo:i 
+
+    )
+
+  ), 
+
+
+
+  /*Permuta das linhas */
+
+
+
+  if (pivo#j) then (
+
+      for k:1 thru n+1 do(
+
+          troca:MA[j,k],
+
+          MA[j,k]:MA[pivo,k],
+
+          MA[pivo,k]:troca
+
+      ) 
+
+  ), 
+
+  /*_______________________Construção da matriz triangular superior */
+
+  if MA[j,j]#0 then (
+
+    for i:j+1 thru n do(
+
+      constante:MA[i,j]/MA[j,j],
+
+      for k:j thru n+1 do(
+
+          MA[i,k]:MA[i,k]-constante*MA[j,k] 
+
+      )
+
+    )
+
+  ),
+print('k=j,",", "Matriz Ampliada MA= ", MA)                  
+
+),
+
+
+
+sol:zeromatrix(n,1),
+
+for i:n step -1 thru 1 do (
+
+    soma:0,
+
+    for k:i+1 thru n do (
+
+        soma:soma + sol[k,1]*MA[i,k]
+
+    ),
+
+    sol[i,1]:(MA[i,n+1]-soma)/MA[i,i]
+
+),
+
+print("       Solução do sistema linear A*X=B é  X= ",box(sol))
+
+)$
+
+
+   testeGJ(A):=block(kill(n,F,r,t),
+        
+        b:false,
+        n:length(A),
+    if (product(A[i,i],i,1,n)#0)
+     then (    is_diag_dom_row (mat, i) := is(2*abs(mat[i][i]) - lsum(abs(x), x, mat[i]) > 0),
+        is_diag_dom (mat) := every(lambda([i], is_diag_dom_row (mat, i)), makelist(i,i,length(mat))),
+    
+        if  is(is_diag_dom(A)) then (
+            print("A é estritamente diagonalmente dominante"),
+            b:true
+        )
+        else
+            print("A não é estritamente diagonalmente dominante"),
+    print(""),
+        print("Considere a matriz F tal que F_ij=0 se i=j e F_ij=-A_ij/A_ii se i#j" ),
+        F[i,j]:=-A[i,j]/A[i,i],
+    print("F=",f:genmatrix(F,n,n)+diagmatrix(n,1)),
+        print(""),
+        for i:1 thru length(A) do  (r[i]:float(sum(abs(f[i,j]),j,1,length(A)))),
+        RR:create_list(r[i],i,1,length(A)),
+    
+        if (is(lmax(RR)<1))then (
+            print("O Critério das linhas para a matriz F é satisfeito"),
+            b:true
+        ) else
+            print("O Critério das linhas para a matriz F não é satisfeito"),
+    print(""),
+        
+    
+        for j:1 thru length(A) do  (t[j]:float(sum(abs(f[i,j]),i,1,length(A)))),
+            RRR:create_list(t[j],j,1,length(A)),
+    
+        if (is(lmax(RRR)<1))then(
+            print("O Critério das colunas para a matriz F é satisfeito"),
+            b:true
+        )
+        else
+            print("O Critério das colunas para a matriz F não é satisfeito")) else 
+    print("O método não é aplicável, pois existe algum i tal que a_ii=0."),
+    
+    return(b)
+    )$
+    
+    /*Algoritmo Gauss-Jacobi*/
+    
+    GaussJacobi(A,B,X0,epsilon):=block(kill(C,D,C1,D1,E,Y,X),
+    print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+                 print(""),
+        if(testeGJ(A) = false) then
+                 return(print("Portanto, o método de Gauss-Jacobi não é aplicável")),
+    
+        n:length(A),
+    
+        iter:50,
+        XantGJ:copylist(X0),
+        XatualGJ:create_list(0,i,1,n),
+    
+        largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))), 
+    
+        Err(C,D):=last([largest_matrix_element(list(C-D))]/[largest_matrix_element(list(C))]),
+    
+        'X[0]=X[0]:XantGJ,
+    
+    iterationsGJ:0,
+    
+        for k:1 thru iter do (
+                    iterationsGJ: iterationsGJ+1,  
+            for i:1 thru n do (
+            
+                soma:0,
+                
+                for j:1 thru n do (
+                
+                    if j#i then (
+                    soma:soma + A[i,j]*XantGJ[j]
+                    )
+                ),
+                
+                XatualGJ[i]:(B[i]-soma)/A[i,i]
+            
+            ), 
+            X[k]:float((XatualGJ)), Y[k]:float(abs(Err(XatualGJ,XantGJ))),
+            
+            
+            if (abs(Err(XatualGJ,XantGJ)))<epsilon then (return( box('X^([k])=X[k]:float(XatualGJ)))),
+            
+            XantGJ:(copylist((XatualGJ)))
+      
+        ),
+        print(""),
+              C1[i,j]:=i, D1[i,j]:=X[i], E[i,j]:=Y[i],
+        cabecalho: matrix(['k, X['k], abs('X['k]-'X['k-1])/'X['k]]),
+            P:matrix([0,X0,~]),
+            W:addcol(genmatrix(C1,iterationsGJ,1), genmatrix(D1,iterationsGJ,1),genmatrix(E,iterationsGJ,1)),
+            print("Tabela de iterações pelo método de Gauss-Jacobi"),
+      print(""),      print(addrow(cabecalho,P,W)),     print("")
+    )$
+    
+
+/*############
+
+Gauss - Seidel
+###########*/
+
+testeGS(A):=block(n:length(A),
+        b:false,
+    n:length(A),
+if (product(A[i,i],i,1,n)#0)
+ then (
+    is_diag_dom_row (mat, i) := is(2*abs(mat[i][i]) - lsum(abs(x), x, mat[i]) > 0),
+    is_diag_dom (mat) := every(lambda([i], is_diag_dom_row (mat, i)), makelist(i,i,length(mat))),
+
+    if  is(is_diag_dom(A)) then (
+        print("A é estritamente diagonalmente dominante"),
+        b:true
+    )
+    else
+        print("A não é estritamente diagonalmente dominante"),
+print(""),
+
+    F[i,j]:=-A[i,j]/A[i,i],
+
+for i:1 thru n do print(
+
+'β[i]=β[i]:float(sum(abs(F[i,j])*β[j],j,1,i-1)+sum(abs(F[i,j]),j,i+1,n))),
+
+/*Verificação se o máximo dos β[i]'s é menor que 1:*/
+
+C:create_list(β[i],i,1,n),
+
+largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))),
+
+if is((largest_matrix_element(list(C)))<1) then (print("O Critério de Sanssenfeld é satisfeito"),b:true) else
+
+ print("O Critério de Sanssenfeld não é satisfeito"),
+print(""),
+    print("Considere a matriz F tal que F_ij=0 se i=j e F_ij=-A_ij/A_ii se i#j" ),
+
+print("F=",f:genmatrix(F,n,n)+diagmatrix(n,1)),
+    print(""),
+    for i:1 thru length(A) do  (r[i]:float(sum(abs(f[i,j]),j,1,length(A)))),
+    RR:create_list(r[i],i,1,length(A)),
+
+    if (is(lmax(RR)<1))then (
+        print("O Critério das linhas para a matriz F é satisfeito"),
+        b:true
+    ) else
+        print("O Critério das linhas para a matriz F não é satisfeito")) else 
+    print("O método não é aplicável, pois existe algum i tal que a_ii=0."),
+return(b)
+
+)$
+
+/*Algoritmo Gauss-Seidel*/
+
+GaussSeidel(A,B,X0,epsilon):=block(kill(C,X,Y),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+    if(testeGS(A) = false) then
+             return(print("Portanto, o método de Gauss-Seidel não é aplicável")),
+
+    n:length(A),
+
+    iter:50,
+    XantGS:copylist(X0),
+    XatualGS:create_list(0,i,1,n),
+
+    largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))), 
+
+    Err(C,D):=last([largest_matrix_element(list(C-D))]/[largest_matrix_element(list(C))]),
+
+    'X[0]=X[0]:XantGS,
+
+iterationsGS:0,
+
+    for k:1 thru iter do (
+                iterationsGS: iterationsGS+1,  
+       for i:1 thru n do (
+
+    soma1:0,
+
+    for j:i+1 thru n do (
+
+        soma1:soma1 + A[i,j]*XantGS[j]   
+
+    ),
+
+    soma2:0,
+
+    for j:1 thru i-1 do (
+
+        soma2:soma2 + A[i,j]*XatualGS[j]   
+
+    ),
+
+    XatualGS[i]:(B[i]-soma1-soma2)/A[i,i]
+
+  ), 
+
+        X[k]:float((XatualGS)), Y[k]:float(abs(Err(XatualGS,XantGS))),
+        
+        
+        if (abs(Err(XatualGS,XantGS)))<epsilon then (return( box('X^([k])=X[k]:float(XatualGS)))),
+        
+        XantGS:(copylist((XatualGS)))
+  
+    ),
+    print(""),
+          C1[i,j]:=i, D[i,j]:=X[i], E[i,j]:=Y[i],
+    cabecalho: matrix(['k, X['k], abs('X['k]-'X['k-1])/'X['k]]),
+        P:matrix([0,X0,~]),
+        W:addcol(genmatrix(C1,iterationsGS,1), genmatrix(D,iterationsGS,1),genmatrix(E,iterationsGS,1)),
+        print("Tabela de iterações pelo método de Gauss-Seidel"),
+  print(""),      print(addrow(cabecalho,P,W)),     print("")
+)$
+norma_linha(A):=block([n],
+n:length(A),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+
+for i:1 thru length(A) do print( "Soma dos elementos da linha",i=z[i]:float(sum(abs(A[i,j]),j,1,n))),
+C:create_list(z[i],i,1,n),
+largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))),
+print("||A||_infty =",(largest_matrix_element(list(C))))
+)$
+
+norma_coluna(A):=block([n],
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+
+n:length(A),
+for j:1 thru n do print("Soma dos elementos da coluna",
+j=w[j]:float(sum(abs(A[i,j]),i,1,n))),
+H:create_list(w[j],j,1,n),
+print("||A||_1 =",(largest_matrix_element(list(H)))))$
+
+norma_euclidiana(A):=block(
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+print("||A||_E =",float(sum(sum((A[i,j])^2,i,1,length(A)),j,1,length(A))^(1/2))))$
+Norma_linha(A):=block([n],
+n:length(A),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+
+for i:1 thru length(A) do ( "Soma dos elementos da linha",i=z[i]:float(sum(abs(A[i,j]),j,1,n))),
+C:create_list(z[i],i,1,n),
+largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))),
+return(largest_matrix_element(list(C)))
+)$
+K(A):=block([n], kill(W),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+ W:Norma_linha(A)*Norma_linha(invert(A)),
+if W<1.1 then (print("Como K(A)=", W," o sistema é bem condicionado")) else
+ (print("O sistema é mal condicionado, pois, K(A)=",
+W,">1")))$
+
+ Cramer(A,B):=block(kill(d,x,D),
+    print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+d:determinant(A),
+    print(""),
+    if d=0 then print("A Regra de Cramer não é válida, pois det(A)=0.") else (
+
+        print("Cálculo do determinante da matriz dos coeficientes:"),
+    print("det(A)=",d),
+x:zerofor(B),
+            print(""),
+print("Cálculo dos determinantes de D_i=det(A_i), onde A_i é a matriz obtida de A substituindo a coluna i de A pelo"),
+        print(" vetor coluna de B:"),
+      for i : 1 thru matrix_size(A)[2] do  print('D[i]=D[i]:(-1)^(i+matrix_size(A)[2])*determinant(addcol(submatrix(A,i),B))),
+    for i : 1 thru matrix_size(A)[2] do  (x[i]:(-1)^(i+matrix_size(A)[2])*determinant(addcol(submatrix(A,i),B))/d),
+    print(""),    print("A solução pelo método de Cramer é"),
+    print('X=X:x))
+)$
+
+
+
+       testeGJ1(A):=block(kill(n,F,r,t),
+        
+        b:false,
+        n:length(A),
+    if (product(A[i,i],i,1,n)#0)
+     then (    is_diag_dom_row (mat, i) := is(2*abs(mat[i][i]) - lsum(abs(x), x, mat[i]) > 0),
+        is_diag_dom (mat) := every(lambda([i], is_diag_dom_row (mat, i)), makelist(i,i,length(mat))),
+        if  is(is_diag_dom(A)) then (
+            ("A é estritamente diagonalmente dominante"),
+            b:true
+        )
+        else
+            ("A não é estritamente diagonalmente dominante"),
+    
+    
+        F[i,j]:=-A[i,j]/A[i,i],
+    ("F=",f:genmatrix(F,n,n)+diagmatrix(n,1)),
+    
+        for i:1 thru length(A) do  (r[i]:float(sum(abs(f[i,j]),j,1,length(A)))),
+        RR:create_list(r[i],i,1,length(A)),
+        if (is(lmax(RR)<1))then (
+            ("O Critério das linhas para a matriz F é satisfeito"),
+            b:true
+        ) else
+            ("O Critério das linhas para a matriz F não é satisfeito"),
+        
+        for j:1 thru length(A) do  (t[j]:float(sum(abs(f[i,j]),i,1,length(A)))),
+            RRR:create_list(t[j],j,1,length(A)),
+        if (is(lmax(RRR)<1))then(
+            ("O Critério das colunas para a matriz F é satisfeito"),
+            b:true
+        )
+        else
+    ("O Critério das colunas para a matriz F não é satisfeito")) else 
+    ("O método não é aplicável, pois existe algum i tal que a_ii=0."),
+    return(b)
+    )$
+    /*Algoritmo Gauss-Jacobi*/
+    GaussJacobi1(A,B,X0,epsilon):=block(kill(C,D,C1,D1,E,Y,X),
+    
+        if(testeGJ1(A) = false) then
+            return(),
+        n:length(A),
+        iter:50,
+        XantGJ:copylist(X0),
+        XatualGJ:create_list(0,i,1,n),
+        largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))), 
+        Err(C,D):=last([largest_matrix_element(list(C-D))]/[largest_matrix_element(list(C))]),
+        'X[0]=X[0]:XantGJ,
+    iterationsGJ:0,
+        for k:1 thru iter do (
+                    iterationsGJ: iterationsGJ+1,  
+            for i:1 thru n do (
+            
+                soma:0,
+                
+                for j:1 thru n do (
+                
+                    if j#i then (
+                    soma:soma + A[i,j]*XantGJ[j]
+                    )
+                ),
+                
+                XatualGJ[i]:(B[i]-soma)/A[i,i]
+            
+            ), 
+            X[k]:float((XatualGJ)), Y[k]:float(abs(Err(XatualGJ,XantGJ))),
+            
+            
+            if (abs(Err(XatualGJ,XantGJ)))<epsilon then (return( box('X^([k])=X[k]:float(XatualGJ)))),
+            
+            XantGJ:(copylist((XatualGJ)))
+      
+        )
+    )$
+
+
+      /*############
+    Gauss - Seidel
+    ###########*/
+    testeGS1(A):=block(n:length(A),
+            b:false,
+        n:length(A),
+    if (product(A[i,i],i,1,n)#0)
+     then (
+        is_diag_dom_row (mat, i) := is(2*abs(mat[i][i]) - lsum(abs(x), x, mat[i]) > 0),
+        is_diag_dom (mat) := every(lambda([i], is_diag_dom_row (mat, i)), makelist(i,i,length(mat))),
+        if  is(is_diag_dom(A)) then (
+    ("A é estritamente diagonalmente dominante"),
+            b:true
+        )  
+        else
+    ("A não é estritamente diagonalmente dominante"),
+    
+        F[i,j]:=-A[i,j]/A[i,i],
+    for i:1 thru n do (
+    'β[i]=β[i]:float(sum(abs(F[i,j])*β[j],j,1,i-1)+sum(abs(F[i,j]),j,i+1,n))),
+    /*Verificação se o máximo dos β[i]'s é menor que 1:*/
+    C:create_list(β[i],i,1,n),
+    largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))),
+    if is((largest_matrix_element(list(C)))<1) then (("O Critério de Sanssenfeld é satisfeito"),b:true) else
+    ("O Critério de Sanssenfeld não é satisfeito"),
+    ("Considere a matriz F tal que F_ij=0 se i=j e F_ij=-A_ij/A_ii se i#j" ),
+    ("F=",f:genmatrix(F,n,n)+diagmatrix(n,1)),
+    
+        for i:1 thru length(A) do  (r[i]:float(sum(abs(f[i,j]),j,1,length(A)))),
+        RR:create_list(r[i],i,1,length(A)),
+        if (is(lmax(RR)<1))then (
+    ("O Critério das linhas para a matriz F é satisfeito"),
+            b:true
+        ) else
+    ("O Critério das linhas para a matriz F não é satisfeito")) else 
+    ("O método não é aplicável, pois existe algum i tal que a_ii=0."),
+    return(b)
+    )$
+
+       /*Algoritmo Gauss-Seidel*/
+    GaussSeidel1(A,B,X0,epsilon):=block(kill(C,X,Y),
+    
+        if(testeGS1(A) = false) then
+            return(),
+        n:length(A),
+        iter:50,
+        XantGS:copylist(X0),
+        XatualGS:create_list(0,i,1,n),
+        largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))), 
+        Err(C,D):=last([largest_matrix_element(list(C-D))]/[largest_matrix_element(list(C))]),
+        'X[0]=X[0]:XantGS,
+    iterationsGSS:0,
+        for k:1 thru iter do (
+                    iterationsGSS: iterationsGSS+1,  
+           for i:1 thru n do (
+        soma1:0,
+        for j:i+1 thru n do (
+            soma1:soma1 + A[i,j]*XantGS[j]   
+        ),
+        soma2:0,
+        for j:1 thru i-1 do (
+            soma2:soma2 + A[i,j]*XatualGS[j]   
+        ),
+        XatualGS[i]:(B[i]-soma1-soma2)/A[i,i]
+      ), 
+            X[k]:float((XatualGS)), Y[k]:float(abs(Err(XatualGS,XantGS))),
+            
+            
+            if (abs(Err(XatualGS,XantGS)))<epsilon then (return( box('X^([k])=X[k]:float(XatualGS)))),
+            
+            XantGS:(copylist((XatualGS)))
+      
+        )
+    )$
+
+
+       custo(A,B,X0,epsilon):=block(print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+                 print(""),
+        b:false,
+        n:length(A),
+        GaussJacobi1(A,B,X0,epsilon),
+        GaussSeidel1(A,B,X0,epsilon),
+     
+      GJJ(A):=  if(testeGJ1(A) = false) then
+    ( ("O método não é aplicável")) else ((2*n^2-n)*iterationsGJ),
+        
+         GSS(A):=  if(testeGS1(A) = false) then
+    ( ("O método não é aplicável")) else ((2*n^2-n)*iterationsGSS),
+    cabecalho: matrix(["Método", "Número de operações"]),
+        
+    cramer:matrix(["Cramer",n*(n+1)!-1]),
+    subst:matrix(["Substituição",(2*n^3+6*n^2-5*n)/3]),
+    escal:matrix(["Eliminação de Gauss (sem pivotamento)",(4*n^3+9*n^2-7*n)/6]),
+    lu:matrix(["LU",(4*n^3+9*n^2-n)/6]),
+    cholesky:matrix(["Cholesky",n^3/6+n^2/2-2*n/3+n^3/6-n/6+n^2]),
+                GJ:matrix(["Gauss-Jacobi",
+    GJJ(A)]),
+              GS:matrix(["Gauss-Seidel",
+    GSS(A)]),
+                print("Tabela que exibe um comparativo entre os métodos diretos e iterativos"),
+      print(""),      print(addrow(cabecalho,cramer,subst,escal,lu,cholesky,GJ,GS)),     print("")
+    )$

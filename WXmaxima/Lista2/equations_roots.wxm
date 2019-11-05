@@ -1,0 +1,443 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 18.02.0 ] */
+/* [wxMaxima: comment start ]
+Universidade Tecnológica Federal do Paraná
+Professor: Wellington José Corrêa
+Orientando: Ayrton Vinícius Gomes Ribeiro
+Cálculo Numérico
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: title   start ]
+Raízes de Equações
+   [wxMaxima: title   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Vamos apresentar um tutorial de como usar o software wxMaxima para determinar numericamente as raízes da equação f(x)=0 pelo métodos da bissecção, do ponto fixo, Newton-Raphson, secante e regula falsi. Para facilitar o uso ao aluno, usaremos alguns exemplos apresentados em sala.
+
+Para  reproduzir todos os algoritmos dos métodos citados acima, é prudente gravar seus comandos em um arquivo em lotes. Tal arquivo de protocolo é na verdade um programa do wxMaxima, denotado por "equations_roots.mac". no qual é carregado em uma das seções do WxMaxima por meio do comando load (“equations_roots.mac”).
+
+Deste modo, faça o download do arquivo "equations_roots.mac" em qualquer pasta de seu computador.
+Em seguida, abra o software Wxmaxima e então, clique em Arquivo/Carregar pacote... e procure o arquivo "equations_roots.mac" e carregue-o. 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("/home/welljc/Dropbox/tex/Cálculo numérico/métodos prontos/Raizes de soluções/Arquivos WxMaxima/equations_roots.mac")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Método da Bissecção
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+De modo a empregar o método da bissecção, basta usar o procedimento bisseccao(f,epsilon,a,b).
+
+Exemplo: Calcule a raiz positiva da equação f(x)=x^2-3 com tolerância 'epsilon' <= 0,01.
+
+Solução: Primeiramente, assim como neste método e nos outros a serem apresentados, é preciso definir a função f(x) pelo comando
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=x^2-3;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Para a escolha adequada do intervalo [a,b], é conveniente plotar o gráfico de f recorrendo ao comando
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d(f(x), [x,0,2])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Observando o gráfico acima, escolhamos os pontos a=1 e b=2, por exemplo.  Logo,
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+bisseccao(f,1e-2,1,2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Vamos por fim, plotar o gráfico de f(x) com as iterações x_k. Para tanto, basta recorrer ao comando:
+
+graficoBissec(f,a,b);
+
+Usando [a,b]=[1,2] tomando na iteração anterior,  resulta que
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoBissec(f,1,2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Por outro lado, se tivéssemos escolhido a=1 e b=1.5, o procedimento acima nos devolveria a seguinte informação:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+bisseccao(f,1e-2,1,1.5)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Exemplo: Obtenha a raiz da equação f(x) = x^2 + ln(x) com 'epsilon' <= 10^(-2).
+
+Solução: Inicialmente, como feito no exemplo anterior, definamos f(x) (lembre-se que no wxMaxima, 
+a função ln(x) é digitada como log(x)):
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=x^2+log(x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Plotando o gráfico de f(x) resulta que:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([log(x)+x^2], [x,.2,2])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Tendo em mente o gráfico acima, escolhamos por exemplo, a=0.5 e b=1,logo, resulta
+do procedimento usado anteriormente que 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+bisseccao(f,1e-2,.5,1)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+O gráfico de f(x) que contém todas as iterações é dado a seguir:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoBissec(f,.5,1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Método do Ponto Fixo
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Neste método, devemos usar o procedimento 
+      pontoFixo(F,epsilon,a,b,x0) 
+onde F é a função de iteração que satisfaz F(x)=x, a,b são os extremos do intervalo escolhido e x0 um ponto do interior deste intervalo.
+
+Exemplo: Seja f(x)=x^3-x-1. Determine uma raiz de f(x) com tolerância 'epsilon' <= 10^(-3).
+
+Solução: Primeiramente, é preciso definir a função f(x) pelo comando:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=x^3-x-1;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Como de praxe, plotamos o gráfico de f(x):
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d([f(x)], [x,.2,2])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Pelo gráfico, escolhamos a=.5,b=2 e x0=1.5, por exemplo. 
+Considere F(x)=x^3-1. Definindo-a e usando o procedimento para o ponto fixo descrito acima, note que:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+F(x):=x^3-1;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+pontoFixo(F,1e-3,.5,2,1.5)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Pelo teorema visto em sala de aula, não há garantia que F acima converge. Agora, considere 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+F(x):=(x+1)^(1/3);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Logo,  
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+pontoFixo(F,1e-3,.5,2,1.5)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+A seguir, temos uma interpretação geométrica do método do ponto fixo:
+interpgeom(F,x0,a,b);
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+interpgeom(F,1.5,.5,2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Se somente desejarmos o gráfico de f(x) com as iterações dadas, basta usar o comando
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoPontofixo(f,.5,2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Exemplo: Obtenha uma raiz da equação f(x)=cos(x)-x=0 com precisão de 'epsilon'=10^(-2).
+
+Solução: Definamos f(x) e plotamos seu gráfico:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=cos(x)-x;
+wxplot2d([f(x)], [x,.2,2])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Pelo gráfico, consideremos a=0.5, b=1 e x0='pi'/4. Definamos a seguinte função de iteração:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+F(x):=cos(x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+pontoFixo(F,1e-2,.5,1,float(%pi/4))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Como no exemplo anterior, vejamos como é a interpretação geométrica do método do ponto fixo agora com F(x)=cos(x):
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+interpgeom(F,float(%pi/4),.5,1)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Ademais, plotamos o gráfico de f(x) com as iterações obtidas:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoPontofixo(f,.5,1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Método de Newton
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Para este método, usaremos o procedimento Newton(f,epsilon,a,b).
+
+Exemplo: usando o método de Newton, obtenha a raiz positiva da equação x^2-2=0 com 'epsilon'=10^(-5).
+
+Solução: Inicialmente, observe que neste exemplo, obteremos uma aproximação para raiz quadrada de 2 com precisão de
+quatro casas decimais. De fato, definamos f(x)=x^2-2 e plotamos seu gráfico:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=x^2-2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+wxplot2d(f(x), [x,0,2])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Pelo gráfico, sejam a=1 e b=2. Assim,
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+newton(f,1e-5,1,2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Podemos plotar o gráfico de f(x) com as iterações obtidas por meio do comando:
+graficoNewton(f,a,b)$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoNewton(f,1,2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Exemplo: Usando o método de Newton, obtenha uma aproximação para a solução da equação f(x)=cos(x)-x com 'epsilon'<=10^(-2).
+
+Solução: Sabemos do segundo exemplo visto na seção "método do ponto fixo" que a=0.5, b=1 e x0='pi/4. Logo,
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=cos(x)-x$
+newton(f,1e-2,.5,float(%pi/4))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+O gráfico de f(x) com as iterações é dado a seguir:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoNewton(f,.5,float(%pi/4))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Método da Secante
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+Nesta seção, o procedimento a ser usado é secante(f,epsilon,a,b).
+
+Exemplo: Utilize o método da secante para encontrar uma solução de x=cos(x) com 'epsilon'<=10^(-5).
+
+Solução: Como visto anteriormente, a=0.5, b=1 e x0='pi'/4.
+Logo,
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=cos(x)-x$
+secante(f,1e-5,.5,float(%pi/4))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoSecante(f,.5,float(%pi/4))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Exemplo: Determine uma raiz de f(x)=x^3-4x^2+x+6 com 'epsilon'<=10^(-2).
+
+Solução: Definamos f e plotamos seu gráfico:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=x^3-4*x^2+x+6$
+wxplot2d(f(x),[x,0,3])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Pelo gráfico, escolhamos por exemplo, x0=1.4 e x1=2.2. Logo,
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+secante(f,1e-2,1.4,2.2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Como de praxe em cada exemplo, vamos plotar o gráfico das iterações com a função f(x):
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoSecante(f,1.4,2.2)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: section start ]
+Método da Falsa Posição (Regula Falsi)
+   [wxMaxima: section end   ] */
+
+
+/* [wxMaxima: comment start ]
+O procedimento a ser usado é regulafalsi(f,epsilon,a,b).
+
+Exemplo: Utilize o método Regula Falsi para encontrar uma solução de x=cos(x) com 'epsilon'<=10^(-5).
+
+Solução: Sabemos dos exemplos anteriores que a=0.5, b=1 e x0='pi'/4. Deste modo,
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f(x):=cos(x)-x$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+regulaFalsi(f,1e-5,.5,float(%pi/4))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Finalmente, plotando o gráfico de f(x) contendo as iterações obtidas, temos:
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+graficoRegulaFalsi(f,.5,float(%pi/4))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 18.02.0"$

@@ -1,0 +1,452 @@
+start(a):=block(print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()))$
+
+qtd(x):=block(                  /* Esta função retorna a quantidade de digitos que possui um numero. Ela vai     */
+                                /* multiplicanto o "maximo" por 10 e o tamanho vai contando até o "maximo" ser   */
+    maximo: 0.99,               /* maior do que o numero. Então, chegamos ao numero de digitos que o numero      */
+    tamanho:0,                  /* possui.                                                                       */
+
+    while( x > maximo ) do (
+        maximo: maximo * 10,
+        tamanho: tamanho + 1
+    ),
+    
+return(tamanho)
+);
+
+bintodecDecimal(ptInteira):=block(
+    exp: 0,
+    value: 0,
+
+    while ptInteira > 0 do  (                                   /*enquanto tiver valor para converter*/
+    
+        if( remainder(ptInteira, 10) = 1 ) then (               /*se o digito for 1*/
+            value: value + 2^exp,                               /*soma o valor com 2 elevado ao expoente*/
+            ptInteira: rationalize(float(ptInteira/10) - 0.1)   /*remove o digito 1 que já foi somado*/
+        )
+    
+        else                                                    /*se o digito é 0*/
+            ptInteira: ptInteira/10,                            /*somente divide para remover o digito 0*/
+    
+        exp: exp + 1                                            /*incrementa o expoente*/
+    ),
+
+    return(value)
+);
+
+bintodecFracionario(ptInteira, ptFracionaria):=block(
+
+    value: bintodecDecimal(ptInteira),                                  /*a parte inteira é convertida na outra funcao*/
+
+    exp: qtd(ptFracionaria),  /*descubro a quantidade de digitos da parte fracionario, pois comeca a ser verificado o bit menos significativo, ou seja, o mais a direita, então precisa saber qual o expoente naquele digito*/
+
+    while exp > 0 do (                                                  /*enquanto o expoente for maior do que zero*/
+
+            if( remainder(ptFracionaria, 10) = 1 ) then (                 /*se o digito for 1*/
+                value: value + float(2^(-exp)),                         /*soma ao resultado 2 elevado ao expoente negativo*/
+                ptFracionaria: rationalize(float(ptFracionaria/10) - 0.1)   /*remove o digito que já foi verificado*/
+            )
+
+            else                                                        /*se o digito for 0*/
+                ptFracionaria: ptFracionaria/10,                            /*somente divide para remover o digito 0*/
+
+            exp: exp - 1                                                /*decrementa o expoente*/
+        ),
+
+    return(value)
+);
+
+dectobinDecimal(ptInteira):=block(
+
+    string: "",
+
+    while (ptInteira > 1) do (
+
+        if (mod(ptInteira,2) = 0) then (
+            ptInteira:rationalize(ptInteira/2),
+            string: concat(0, string)
+        )
+
+        else (
+            ptInteira:rationalize((ptInteira/2)-0.5),
+            string: concat(1, string)
+        )
+    ),
+
+    if(ptInteira = 1) then
+        string: concat(1, string)
+    else
+        string: concat(0, string),
+
+return (string)
+);
+
+dectobinFracionario(ptInteira, ptFracionaria):=block([string, cont, limite, qtd],
+
+    limite: 1,
+    cont: 0,
+    string: "",
+    string: dectobinDecimal(ptInteira),             /*convertendo a parte inteira*/
+
+    qtd: qtd(ptFracionaria),                          /*agora a função precisa saber quantos digitos tem a parte fracionaria*/
+
+    while qtd > 0 do (                              /*essa parte é necessária, pois a parte fracionaria não é mais passada*/
+        limite: 10*limite,                          /*como 0.2342 por exemplo, e sim como 2342. Então precisa saber qual é*/
+        qtd: qtd-1                                  /*limite, que no caso normal seria o 1.                               */
+    ),
+
+    string: concat(string, ","),
+
+    while( ptFracionaria # 0 and cont < 15 ) do (
+
+        ptFracionaria: ptFracionaria * 2,
+
+            if( ptFracionaria >= limite ) then (
+                string: concat(string, 1),
+
+                ptFracionaria: ptFracionaria - limite
+            )
+
+            else
+                string: concat(string, 0),
+
+        cont: cont + 1
+
+    ),
+
+    return (string)
+)$
+
+qtd(x):=block(                  /* Esta função retorna a quantidade de digitos que possui um numero. Ela vai     */
+                                /* multiplicanto o "maximo" por 10 e o tamanho vai contando até o "maximo" ser   */
+    maximo: 0.99,               /* maior do que o numero. Então, chegamos ao numero de digitos que o numero      */
+    tamanho:0,                  /* possui.                                                                       */
+
+    while( x > maximo ) do (
+        maximo: maximo * 10,
+        tamanho: tamanho + 1
+    ),
+    
+return(tamanho)
+)$
+
+(count:0, for z in charlist("0123456789abcdef") do (hex[z]:count,
+count:count+1),
+count:10, for z in charlist("ABCDEF") do (hex[z]:count, count:count+1),
+
+hex[q]:=error("invalid hex digit ", q),
+
+hexstring2int(r):= block([ans:0],
+for z in charlist(r) do (ans:16*ans,ans:ans+hex[z]),
+ans))$
+
+dectohex(ptInteira):=block(
+
+    string: "",
+
+    while (ptInteira > 0) do (
+
+        resto: mod(ptInteira,16),           /*pega o resto da divisao por 16    */
+        ptInteira:floor(ptInteira/16),      /*divide o valor por 16             */
+
+        if(resto < 10) then                 /*se o resto da divisao for menor do que 10,                */
+            string: concat(resto, string)   /*esse valor eh o mesmo tanto em decimal quanto em hexadecimal*/
+        else if(resto = 10) then
+            string: concat("A", string)     /*porem se for maior do que 10, ele em hexadecimal eh representado  */
+        else if(resto = 11) then            /*pelas letras de A-F. Entao tem que saber qual letra representa    */
+            string: concat("B", string)     /*este numero.                                                      */
+        else if(resto = 12) then
+            string: concat("C", string)
+        else if(resto = 13) then
+            string: concat("D", string)
+        else if(resto = 14) then
+            string: concat("E", string)
+        else if(resto = 15) then
+            string: concat("F", string)
+    ),
+    return(string)
+)$
+
+dectohexF(ptInteira, ptFlutuante):=block([strInt, strFlt, count, qtd, limite],
+    
+    strInt: dectohex(ptInteira),                /*converte a parte inteira do numero    */
+    strFlt: "",
+
+    qtd: qtd(ptFlutuante),                      /*descobre a quantidade de digitos o numero tem */
+    limite: 1,
+    while(qtd > 0) do (     /*vai multiplicando ate achar um valor, de acordo com a quantidade de digitos,      */
+        limite: 10*limite,  /*que, multiplicando este valor pela parte flutuante, deixe ele realmente como um   */
+        qtd: qtd-1          /*numero flutuante. Por exemplo: tranformar o numero 45 em 0.45                     */
+    ),
+
+    ptFlutuante: float(ptFlutuante/limite), /*aqui eh realizada a tranformação de 45 em 0.45 por exemplo.        */
+    count: 0,
+    while(count < 15 and ptFlutuante # 0.0) do (    /*enquanto a parte flutuante for diferente de zero, ainda deve  */
+        limite: ptFlutuante*16,                     /*continuar a conversao. Porem se o numero passar de 15 digitos */
+        strFlt: concat(strFlt, floor(limite)),      /*nao sera viavel ter um resultado maior que este.              */
+        ptFlutuante: (limite) - floor(limite),
+        count: count + 1
+    ),
+
+    strFlt: concat(".", strFlt),
+    strFlt: concat(strInt, strFlt),
+    return(strFlt)
+)$
+
+bintohex(ptInteira):=block(
+    return (dectohex(bintodec(ptInteira)))
+)$
+
+hextobin(ptInteira):=block(
+    return (dectobin(hextodec(ptInteira)))
+)$
+
+Represenbin(t,emin,emax):=block(kill(ε,h,k),
+h(x) := if x = 1 then 1 else [0,1],
+SSoma(N):=block([k],
+k:0,
+for i thru N do k: k+h(i)*2^-i,
+return ( (k)) 
+),
+    ('ε=float(2^-t)),
+    print('Fmin=Fmin:float(lmin(SSoma(t)*2^emin))),
+print(    'Fmax=Fmax:float(lmax(SSoma(t)*2^emax))),
+    print("Número total de elementos na desta aritmética de ponto flutuante é ",2*2^(t-1)*(emax-emin+1)+1,"(incluindo números positivos, negativos e o zero).")
+)$
+
+
+
+ea(p,p1):=" Erro absoluto "= float(abs(p-p1))$
+
+er(p,p1):=" Erro relativo "= float(abs(p-p1)/abs(p1))$
+
+log_10(s):=log(s)/log(10)$
+trunc(num,alg):=block([d,t],
+d:num,
+t:alg,
+if d=0 then 0
+else
+(e:ceiling(ev(log_10(abs(d)))),
+f:ev(truncate(d*10^(t-e)))*10^(e-t)
+), print(float(f))
+)$
+
+arred(n,alg):=block(
+fpprec:alg,
+set_display('ascii),
+bfloat(n))$
+
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.04.2 ] */
+
+/* [wxMaxima: input   start ] */
+getfull(x):=block(                              /* Esta função retorna um numero sem o ponto. Por exemplo:  */
+cont: 10,                                       /* o numero 1000.1101 ele retorna 10001101. O problema é    */
+                                                /* quando um numero é muito grande, então o wxmaxima arre-  */
+while ( cont*x # float(ceiling( cont*x )) ) do  /* donda ele, e faz ele ficar com suas ultimas casas meio   */
+        cont: cont*10,                          /* estranhas.                                               */
+
+return(truncate(x*cont))
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+qtd(x):=block(                  /* Esta função retorna a quantidade de digitos que possui um numero. Ela vai     */
+                                /* multiplicanto o "maximo" por 10 e o tamanho vai contando até o "maximo" ser   */
+    maximo: 0.99,               /* maior do que o numero. Então, chegamos ao numero de digitos que o numero      */
+    tamanho:0,                  /* possui.                                                                       */
+
+    while( x > maximo ) do (
+        maximo: maximo * 10,
+        tamanho: tamanho + 1
+    ),
+    
+return(tamanho)
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+bintodec(x):=block(
+
+    exp: 0,
+    value: 0,           /* Variaveis necessárias */
+    ft: x,
+    x: truncate(x),     /* Aqui o x recebe somente a parte inteira do numero, e ele é convertido separadamente */
+    qtdx: 0,
+    qtdft: 0,
+    zero: false,        /* Se o numero for 0 ou 0.101 por exemplo, eu preciso saber que ele começa com 0    */
+    
+    if( ceiling(x) = 0 ) then ( /* Quando um numero for, por exemplo, 0.0010101, é necessário somar 1 a ele, por que    */
+        zero: true,             /* se não, a função getfull "come" os zero que estão na frente do primeiro 1. Então o   */
+        ft: 1 + ft              /* numero, no caso 0.0010101, ficaria 1.0010101 para não haver problema.                */
+    ),
+
+    while x > 0 do  (                           /* Aqui acontece a conversão da parte inteira.  */
+    
+        if( remainder(x, 10) = 1 ) then (
+            value: value + 2^exp,
+            x: rationalize(float(x/10) - 0.1)
+        )
+    
+        else
+            x: x/10,
+    
+        exp: exp + 1
+    ),
+
+    if( floatnump(ft) = false ) then    /* Se o numero não tiver parte fracionaria, então não tem mais o que converter. */
+       return(value),                   /* Somente retornar.                                                            */
+
+    qtdx: qtd( truncate(ft) ),          /* Essas operações são necessárias para tratar da parte fracionaria. Eu pego a  */
+    x: getfull(ft),                     /* quantidade de digitos da parte inteira e do numero todo. Então subtraio e    */
+    qtdft: qtd( x ),                    /* chego a quantidade de digitos que a parte fracionaria prossui. Então eu sei  */
+    exp: qtdft - qtdx,                  /* qual vai ser o ultimo expoente. E vou começar a converter de traz para frente.*/
+
+    while( exp > 0 ) do (
+
+            if( remainder(x, 10) = 1 ) then (       /* Se o ultimo digito for 1, eu tenho que somar ao valor 2^-exp.    */
+                value: value + float(2^(-exp)),     /* Então eu subtraio 0.1 do numero depois de dividido.              */
+                x: rationalize(float(x/10) - 0.1)
+
+            )
+        
+            else if( remainder(x, 10) = 0 ) then    /* Se não for 1, pode ser zero. Então não tem o que fazer senão     */
+                x: x/10                             /* apenas dividir o numero por 10. E como finaliza em 0, não há     */
+                                                    /* necessidade de subtrair nada dele.                               */
+            else(
+
+                aux: x,                                 /* Como a função getfull pode arredondar o numero, eu tenho que */
+                cont: 0.2,                              /* saber, já que não é 0 nem 1, qual o ultimo digito. Então eu  */
+                while(cont <= 0.9) do (                 /* subtraindo do numero 0.1, 0.2, 0.3 ... 0.9. Quando a conta   */
+                    x: aux,                             /* der certo, a função integerp(x) vai me dizer que o resultado */
+                    x: rationalize(float(x/10) - cont), /* deu um numero inteiro. Então eu sei que acabou essa parte.   */
+    
+                    if( integerp(x) ) then
+                        cont: 1.0,
+                
+                    cont: cont + 0.1
+                  )
+            ),
+    
+            exp: exp - 1    /* Aqui eu subtraio o expoente conforme vou dividindo o numero. */
+        ),
+
+return(value)
+    
+);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
+
+
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.04.2 ] */
+
+/* [wxMaxima: input   start ] */
+dectobin(x):=block([string],
+    
+    string: "",
+    flotoante: false,       /*variaveis necessárias*/
+    resto: 0.0,
+    cont: 0,
+    
+    if( floatnump(x) ) then (   /* Se o numero for flutuante,aqui é separado a parte      */
+        flotoante: true,        /* decimal da parte fracinária. O x é truncado, ele fica  */
+        resto: x,               /* só com a parte inteira, e o resto, com o resto. Então  */
+        x: truncate(x),         /* é subtraido a parte inteira do resto, para que o resto */
+        resto: resto - x        /* fique definitivamente com o resto.                     */
+    ),
+
+    while (x > 1) do (                  /* Enquanto a parte inteira for maior do que 1,  */
+                                        /* ele será dividido por 2. Quando o resto da    */
+        if (mod(x,2) = 0) then (        /* divisão for 0, no resultado será 0. Quando o  */
+            x:rationalize(x/2),         /* resto for 0.5, então terá o resultado 1 e no  */ 
+            string: concat(0, string)   /* numero será que ser subtraido 0.5 até o valor */
+            )                           /* ser menor do que 1                            */
+    
+        else (
+            x:rationalize((x/2)-0.5),
+            string: concat(1, string)
+        )
+    ),
+
+    if(x = 1) then                              /* Quando o valor não é maior do que 1, */
+        string: concat(1, string)               /* sinal de que a conta acabou. Então o */
+    else                                        /* ultimo valor da conta tem que ser    */
+        string: concat(0, string),              /* concatenado no resultado final.      */
+    
+    if( flotoante = false or resto = 0.0 ) then /* Se o numero não tiver parte fracio -  */
+        return(string),                         /* nária, então não tem mais o que fazer,*/
+                                                /* ou se a parte fracionária for 0: 10.0 */
+    string: concat(string, ","),                /* então só basta retornar.              */
+
+    while( resto # 0.0 and cont < 15 ) do (     /* Se o numero tiver parte fracionaria,     */
+                                                /* então aqui ela será convertida. A con-   */        
+        resto: resto * 2,                       /* versão é simples. O numero é multipli-   */
+                                                /* cado por 2, e se o numero for maior      */
+            if( resto >= 1 ) then (             /* do que ou igual a 1, então é concate-    */
+                string: concat(string, 1),      /* nado 1 no resultado, subtraido 1 do resto*/
+                                                /* então acaba a conversão. Se não, a conv- */
+                resto: resto - 1                /* ersão continua até o contador, que conta */
+            )                                   /* as casas decimais, chegar até 15.        */
+
+            else
+                string: concat(string, 0),
+    
+        cont: cont + 1
+    
+    ),
+  
+    return (string)
+
+)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
+
+dectoOct(x):=block(
+
+    string: "",
+
+    while (x > 7) do (          /*enquanto o x for maior que 7 faz: */
+        resto: mod(x,8),            /*pega o resto da divisao por 8    */
+        x:floor(x/8),               /*divide o valor por 16             */
+        string: concat(resto, string)   /*junta o resto na string*/
+    ),
+string: concat(x,string),       /* junta o que sobrou em x na string*/
+return (string)
+);
+
+
+qtdd(y):=block(                  /* Esta função retorna a quantidade de digitos que possui um numero. Ela vai     */
+                                /* multiplicanto o "maximo" por 10 e o tamanho vai contando até o "maximo" ser   */
+    maximo: 0.99,               /* maior do que o numero. Então, chegamos ao numero de digitos que o numero      */
+    tamanho:0,                  /* possui.                                                                       */
+
+    while( x > maximo ) do (
+        maximo: maximo * 10,
+        tamanho: tamanho + 1
+    ),                              /*ESTA FUNÇÃO UTILIZEI DO PACOTE QUE FOI DISPONIBILIZADO*/
+    
+return(tamanho)
+);
+
+
+octtoDec(x):=block(
+    total: 0,
+    quantidade: qtdd(x),
+    exp: quantidade-1,
+    cont: quantidade-1,
+    num: 0,
+    
+    while x > 0 do(          /*enquanto a parte inteira for maior que 0 */
+        num: floor(x/10^cont),    /*recebe o resto inteiro da divisao do numero por 10^quantidade de casas -1  */
+        total: total+(num*8^cont),     /* atualiza o total multiplicando por 8^expoente*/
+        x: x- (num*10^cont),        /* atualiza o valor de x - num* parte inteira*/
+        cont: cont - 1,                             /* decrementa o contador*/
+        exp: exp - 1                              /*decrementa o expoente*/
+    ),
+
+    return(total)           /*retorna o valor total */
+);

@@ -1,0 +1,599 @@
+
+/*     :::::::::::: METÓDO DA BISSEÇÃO OU BISSECÇÃO (TAMBÉM CHAMADO DE MÉTODO DA PESQUISA BINÁRIA OU MÉTODO DA DICOTOMIA) :::::::::::: */ 
+
+/*     >>>>> COMENTÁRIOS E ALGORITMO <<<<<     */
+
+
+       /* (A1)
+       * AS SEGUINTES LISTAS REPRESENTAM AS VARIÁVES QUE DESEJAMOS
+       * AVALIAR DURANTE AS ITERAÇÕES, ELAS ARMAZENARÃO SUAS RESPECTIVAS 
+       * MUDANÇAS AO LONGO DE TODO PROCESSO.
+       *******************************************************************/
+
+      /* (A2)
+       * DECLARAMOS A LISTA 'k' CONTENDO O VALOR 0(ZERO) INICIALMENTE,
+       * POIS O VALOR DE K SERÁ ATUALIZADO ACESSANDO-SE O ÚLTIMO VALOR
+       * CONTIDO NA LISTA, QUE POR EFEITO DEVE TER UM VALOR INICIAL DE 
+       * ACESSO PARA SE EVITAR ERROS DE EXECUÇÃO. VALE RESSALTAR QUE SUA
+       * ÚLTIMA POSIÇÃO TAMBÉM SERVIRÁ NAS TOMADAS DE DECISÕES DENTRO DO 
+       * LAÇO DE REPETIÇÃO (while) MAIS ADIANTE.
+       *******************************************************************/
+
+      /* (A3)
+       * DECLARAMOS A LISTA 'erros' CONTENDO O SÍMBOLO '~' PARA INDICAR 
+       * QUE NÃO EXISTE A PRIMEIRA ITERAÇÃO, QUE DEPENDERIA DE UM VALOR 
+       * AINDA NÃO EXISTENTE SEGUNDO A FÓRMULA.
+       *******************************************************************/
+
+      /* (A4)
+       * OPTAMOS POR DECLARAR 'cabecalho' COMO UMA MATRIZ AO INVÉS DE
+       * UMA LISTA, POIS A FUNÇÃO QUE UTIZAREMOS PERMITIRÁ INSERIRMOS
+       * A TABELA DE INTERAÇÕES (OU MATRIZ DE INTERAÇÕES) LOGO ABAIXO 
+       * DO CABEÇALHO, O QUE NÃO SERIA POSSÍVEL SE 'cabecalho' FOSSE 
+       * UMA LISTA, POIS NÃO PODEMOS ADICIONAR UMA MATRIZ A UMA LISTA,
+       * E O CONTRÁRIO, ADICIONAR UMA LISTA NUMA MATRIZ, FARIA QUE NOSSO
+       * CABEÇALHO FICASSE NA ÚLTIMA LINHA DA MATRIZ, O QUE NÃO FARIA 
+       * SENTINDO PARA OS NOSSOS OBJETIVOS. 
+       *******************************************************************/
+
+      /* (A5)
+       * É AVALIADO A APLICABILIDADE DO MÉTODO SEGUNDO
+       * O TEOREMA DE BOLZANO-CAUCHY.
+       *******************************************************************/
+
+      /* (A6)
+       * A SEGUINTE CONDIÇÃO TEM POR OBJETIVO A PREVENÇÃO DE ERROS, POIS
+       * A FUNÇÃO 'bisseccao()' ESPERA RECEBER COMO PARÂMETRO UM 
+       * INTERVALO [A,B], ONDE A < B. CASO O USUÁRIO INVERTA OS LIMITES 
+       * DO INTERVALO E INFORME UM INTERVALO [B,A], NOSSO PROGRAMA DEVE
+       * APRESENTAR UMA MENSAGEM DE ERRO AO USUÁRIO PEDINDO QUE INFORME O
+       * INTERVALO CORRETAMENTE, CASO CONTRÁRIO TERÍAMOS UM ERRO NA 
+       * ESTIMATIVA DA QUANTIDADE DE ITERAÇÕES REALIZADAS PELA FUNÇÃO 
+       * 'log2() POSTERIORMENTE, POIS O CÁLCULO LOGARÍTMICO DE VALORES 
+       * NEGATIVOS NÃO PERTENCEM AO CONJUNTO DOS NÚMEROS REAIS, CONJUNTO
+       * NO QUAL TRABALHAMOS.
+       ******************************************************************/
+
+      /* (A7) 
+       * A FUNÇÃO DEFINIDA A SEGUIR APLICA A PROPRIEDADE DE MUDANÇA DE BASE
+       * DE UM LOGARITMO, NESTE CASO EM ESPECÍFICO DA BASE 10 P/ BASE 2.
+       *******************************************************************/
+			
+      /* (A8)
+       * A FUNÇÃO DEFINIDA PREVÊ A QUANTIDADE MÍNIMA DE
+       * INTERAÇÕES PARA SE CHEGAR A UMA RAIZ.
+       *******************************************************************/
+			
+      /* (A9)
+       * A SEGUINTE FUNÇÃO TEM POR OBJETIVO DETERMINAR O VALOR DO ERRO A
+       * CADA ITERAÇÃO.
+       *******************************************************************/
+
+      /* (A10) 
+       * OBSERVE QUE O NÚMERO DE INTERAÇÕES ESTÁ DIRETAMENTE LIGADO COM 
+       * O LIMITANTE DE ERRO INFORMADO PELO USUÁRIO, QUE JUNTAMENTE COM 
+       * O ERRO CALCULADO PELA FUNÇÃO 'erro()' DEFINE A CONDIÇÃO DE PARADA 
+       * DO LAÇO LOGO ABAIXO DO COMENTÁRIO.
+       *******************************************************************/
+
+      /* (A11)
+       * A LISTA 'k' POSSUI UM ELEMENTO EXTRA AO FINAL DAS ITERAÇÕES, 
+       * DECORRENTE DA NOSSA INICIALIZAÇÃO COM ZERO, PORTANTO, A MESMA
+       * PRECISA TER SEU TAMANHO NIVELADO COM AS DEMAIS LISTAS, EM OUTRAS
+       * PALAVRAS, PRECISAMOS EXCLUIR SEU ÚLTIMO ELEMENTO COM AS FUNÇÕES
+       * 'delete()' e 'last()' FAZENDO COM QUE ELA POSSUA O MESMO TAMANHO 
+       * DAS OUTRAS LISTAS E ASSIM POSSAMOS FORMAR UMA MATRIZ COM TODAS 
+       * ELAS UTILIZANDO A FUNÇÃO 'matrix()', QUE NÃO FUNCIONARIA CASO 
+       * HOUVESSEM LISTAS COM TAMANHOS DIVERGENTES. 
+       ******************************************************************/
+
+			
+      /* (A12)
+       * A FUNÇÃO 'matrix()' NOS RETORNA UMA MATRIZ COM UMA LISTA POR 
+       * LINHA, O QUE RESULTA NUMA TABELA COM EXPANSÃO LATERAL E QUE 
+       * PODE DIFICULTAR A VISUALIZAÇÃO PARA O USUÁRIO NO MONITOR, 
+       * PORTANTO OPTAMOS EM TRANSPOR NOSSA MATRIZ FAZENDO COM QUE 
+       * TENHAMOS UMA LISTA POR COLUNA E CONSEQUENTEMENTE UMA EXPANSÃO
+       * VERTICAL. PARA TANTO, UTILIZAREMOS A FUNÇÃO 'transpose()' QUE
+       * TRANSFORMA AS LINHAS (OU ,SE PREFERIR, LISTAS) DE NOSSA MATRIZ
+       * EM COLUNAS.
+       *******************************************************************/
+
+
+      /* (A13)
+       * AGORA QUE TEMOS UMA MATRIZ DE VALORES E UM CABEÇALHO 
+       * ('cabecalho') - QUE  EXPLICAMOS ANTERIORMENTE (em A4) O MOTIVO
+       * DO MESMO SER DECLARADO COMO UMA MATRIZ - PODEMOS AGRUPAR AMBOS
+       * FORMANDO REALMENTE NOSSA TABELA DE INTERAÇÕES ATRAVÉS DA NOSSA
+       * FUNÇÃO 'addrow()' QUE OBRIGATORIAMENTE DEVE TER UMA MATRIZ COMO
+       * PRIMEIRO PARÂMETRO.
+       ******************************************************************/
+       /*EM TODOS OS PROCEDIMENTOS ABAIXO, USAREMOS OS COMANDOS 'print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate())' PARA DECLARAR O TEMPO DE EXECUÇAO E O DIRETORIO*/
+
+bisseccao(funcao, limitante, a , b):=
+     block(
+               [ 
+                    /* Comentários (A1), (A2) e (A3) */
+                    k:[0], ak:[], bk:[], fak:[], fbk:[], xk:[], fxk:[], erros:[~],
+
+                    /* Comentário (A4) */
+                    cabecalho: matrix(['k, 'a['k], 'b['k], 'f('a['k]), 'f('b['k]), 'x['k], 'f('x['k]), 'abs('x['k]- 'x['k-1])])
+               ],
+			 print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+			 print(""),
+               /* Comentário (A5) */
+               if funcao(a)*funcao(b) > 0 then
+               (
+                    print("O procedimento não foi bem sucedido pois, f(a) e f(b) tem mesmo sinal"), 
+                    print("f(a) = ", funcao(a)),
+                    print("f(b) = ", funcao(b)),
+                    return (false)
+               ),
+
+               /* Comentaŕio (A6) */
+               if a > b then
+               (
+                    print(""),
+                    print(" ERRO:  Por favor, informe corretamente o intervalo [a,b], onde a < b."),
+                    return(false) 
+               ),
+    
+               /* Comentaŕio (A7) */
+               log2(x):=log(x)/log(2), 
+
+
+               /* Comentário (A8) */ 
+               qtdInteracoes: ceiling(log2((b-a)/limitante-1)),
+               print(""), print(" Serão feitas pelo menos",qtdInteracoes,"ou mais iterações,"), print(""),
+ 
+               /* Comentário (A9) */		
+               erro(a,b):= abs(b-a),
+
+               /* Comentário (A10) */
+               while is(erro(a,b) > limitante) do
+               (    
+                    k: endcons((last(k)+1), k),
+                    ak: endcons(a, ak),
+                    bk: endcons(b, bk),
+                    fak: endcons(funcao(a), fak),
+                    fbk: endcons(funcao(b), fbk),
+                    xk: endcons(float((a+b)*2^(-1)), xk),
+                    fxk: endcons(funcao(last(xk)), fxk),
+
+                    if last(fxk) = 0 then 
+                         return(last(xk)),
+
+                    if (funcao(last(xk))*funcao(a)) > 0 then 
+                         a:last(xk) else b:last(xk),
+
+                    if last(k) > 1 then 
+                         erros: endcons(abs(last(xk)-xk[length(xk)-1]), erros)
+               ), 
+
+               /* Comentário (A11) */
+               k: delete(last(k), k),
+ 
+               /* Comentário (A12) */
+               M: matrix( k, ak, bk, fak, fbk, xk, fxk, erros), M: transpose(M),
+
+		
+               /* Comentário (A13) */
+               M: addrow(cabecalho, M), print(M), print(""),
+
+               print("Donde", %xi," ≃ ",last(xk))
+          )$
+
+
+
+/*     :::::::::::::::::::::::::::::::::::::::::::::::::::::: METÓDO DE NEWTON ::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+/*     >>>>> COMENTÁRIOS E ALGORITMO <<<<<     */
+
+
+      /* (B1)
+       * A FUNÇÃO 'at()' NOS PERMITE APÓS O CALCULO DA SEGUNDA DERIVADA
+       * ATRIBUIRMOS O VALOR QUE DESEJARMOS PARA 'x', ASSIM NOS 
+       * APRESENTANDO UM RESULTADO REFERENTE A 'x' APLICADO NA SEGUNDA 
+       * DERIVADA DA FUNÇÃO. ESSE CÁLCULO É NECESSÁRIO PARA DEFINIRMOS
+       * ENTRE 'p0' E 'p1', QUE SÃO OS LIMITES DO INTERVALO INFORMADO PELO
+       * USUÁRIO, QUEM SERÁ 'x0'.  
+       *******************************************************************/
+
+      /* (B2)
+       * NESSE MOMENTO APLICAMOS A FÓRMULA DE RECORRÊNCIA FORA DO LAÇO,
+       * E ADICIONAMOS O XK RESULTANTE AO FIM DA LISTA 'xk', PARA QUE 
+       * POSSAMOS GARANTIR QUE HAVERÁ ALGUM VALOR NA LISTA CASO NÃO 
+       * ENTREMOS NO LAÇO DE REPETIÇÃO, POIS AO FIM DO CÓDIGO SOLICITAMOS
+       * O ÚLTIMO ELEMENTO DA LISTA 'xk' (com 'last(xk)') O QUE PODERIA
+       * OCASIONAR NUM ERRO CASO NÃO HOUVESSE NENHUM VALOR.
+       *******************************************************************/
+
+      /* (B3)
+       * O PRIMEIRO VALOR DE ERRO TAMBÉM É CALCULADO FORA DO LAÇO DE 
+       * REPETIÇÃO E ADICIONADO AO FIM DA LISTA 'erros' PARA GARANTIR QUE 
+       * NOSSO CRITÉRIO DE PARADA NO LAÇO FUNCIONE CORRETAMENTE, POIS O 
+       * MESMO SOLICITA O ÚLTIMO VALOR CONTIDO NA LISTA 'erros' PARA 
+       * VERIFICAR SUA ENTRADA NO ESCOPO DO LAÇO, QUE POR CONSEQUÊNCIA 
+       * DEVE POSSUIR ALGUM VALOR INÍCIAL, CASO CONTRÁRIO, OCASIONARÁ 
+       * UM ERRO.
+       *******************************************************************/
+
+
+newton(f, epsilon, p0, p1):=
+     block(
+               [
+                    /* Comentário (A1) */
+                    k:[1],xs:[], erros:[], 
+
+                    /* Comentário (A4) */
+                    cabecalho: matrix(['k, 'x['k], 'abs('x['k]-'x['k-1])]), i, x0
+               ],
+               print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+
+               /* Comentário (A5) */
+               if f(p0)* f(p1) > 0 then 
+               (
+                    print("O procedimento não foi bem sucedido pois, f(a) e f(b) tem mesmo sinal"),
+                    print("f(a) = ", f(p0)),
+                    print("f(b) = ", f(p1)),
+                    return (false)
+               ),
+
+               /* Comentário (B1) */
+               if f(p0) * at(diff(f(x),x,2),x=p0) > 0 then 
+               (
+                    x0: p0,
+                    print("Sabemos que ", 'x[0], ", deve satisfazer o seguinte teorema:", 'diff('f('x[0]), 'x, 2), "*", 'f('x[0]),
+                    "> 0, sendo assim, do intervalo [a, b] temos que  "), 
+                    print("---> ", 'x[0], " = a = ", x0),
+                    print("")
+
+                ) else (
+	
+                     x0: p1,
+                     print("Sabemos que ", 'x[0], ", deve satisfazer o seguinte teorema:", 'diff('f('x[0]), 'x, 2),"*",
+                     'f('x[0]), "> 0, sendo assim, do intervalo [a, b] temos que  "), 
+                     print("---> ", 'x[0], " = b = ", x0),
+                     print("")
+                ),
+
+                /* Comentário (B2) */
+                xs: endcons(float(x0-f(x0)/at(diff(f(x),x), x=x0)),xs),
+
+                /* Comentário (B3) */
+                erros: endcons(abs(last(xs)-x0), erros),
+
+                for i:1 step 1 while (last(erros) > epsilon) do
+                (
+                     k: endcons(i+1, k), 
+                     xs: endcons(float(xs[i]-f(xs[i])/at(diff(f(x),x), x=xs[i])),xs),
+                     erros: endcons(abs(xs[i+1]-xs[i]), erros)
+                ),
+
+                /* Comentário (A12) */
+                M: matrix(k, xs, erros), M:transpose(M),
+
+                /* Comentário (A13) */
+                M: addrow(cabecalho, M), print(M), print(""),
+
+                print("Donde ", %xi, " ≃ " ,last(xs))
+          )$
+
+
+/*     ::::::::::::::::::::::::::::::::::::::::::::::::::::: METÓDO DAS SECANTES ::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+/*     >>>>> COMENTÁRIOS E ALGORITMO <<<<<     */
+
+
+      /* (C1)
+       * É APRESENTADO O VALOR DE 'p0' E 'p1' PARA O USUÁRIO COMO SENDO OS 
+       * XK'S INICIAS E ESSES VALORES NÃO SÃO ADICIONADOS NA LISTA, POIS
+       * NÃO DEVEM COMPOR NOSSA TABELA DE ITERAÇÕES POSTERIORMENTE, JÁ QUE
+       * SÃO FORNECIDOS GRATUITAMENTE POR DEFINIÇÃO. 
+       *******************************************************************/
+
+      /* (C2)
+       * PARA FACILITAR A VISUALIZAÇÃO DA FÓRMULA DE RECORRÊNCIA DIVIDIMOS
+       * SUA PARTE FRACIONÁRIO EM 'numerador' E 'denominador'.
+       ******************************************************************/
+
+
+      /* (C3)
+       * NO SEGUINTE TRECHO DE CÓDIGO ATUALIZAMOS 'p0' e 'p1'. NOTE QUE 
+       * ANTES DE ATRIBUIRMOS UM NOVO VALOR A 'p1' SEU VALOR ANTIGO É
+       * PASSADO PARA 'p0' E TAMBÉM UTILIZADO PARA GERAR UM NOVO 'p1'
+       * (OU XK, SE ASSIM PREFERIR, POIS É O QUE ELE REPRESENTA). DESSA 
+       * FORMA, 'p1' SEMPRE DEVE SER ADICIONADO A LISTA 'xk'. 
+       ******************************************************************/
+
+
+secante(f, limitante, p0, p1):= 
+     block(
+               [ 
+                    /* Comentário (A1) */
+                    k:[], xk:[], erros:[],
+
+                    /* Comentário (A4) */
+                    cabecalho: matrix(['k, 'x['k], 'abs('x['k]-'x['k-1])])
+               ],
+               print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+
+               /* Comentário (A5) */
+               if f(p0) * f(p1) > 0 then 
+               (   
+                    print("O procedimento não foi bem sucedido pois, f(a) e f(b) tem mesmo sinal"),
+                    print("f(a) = ",f(p0)),
+                    print("f(b) = ",f(p1)),
+                    return (false)
+               ),
+
+
+              /* Comentário (C1) */
+               print(""),
+               print("Por definição temos que os limites do intervalo [a,b] definem nossos", 'x['k],"'s", "iniciais, desse modo, temos:"),
+               print("   ---> ", 'x[0],"= a = ", p0),
+               print("   ---> ", 'x[1],"= b = ", p1),
+               print("Por efeito, constituindo a seguinte tabela: "),
+               print(""),
+
+               /* Comentário (A9) */
+               erro(a,b):= abs(b-a),
+
+               for i:2 step 1 while (erro(p0, p1) > limitante) do 
+               ( 
+                    k: endcons(i, k),
+
+                    /* Comentário (C2) */
+                    numerador: float(f(p1)*(p1-p0)),
+                    denominador:float(f(p1)-f(p0)),
+
+
+                    /* Comentário (C3) */
+                    p0: p1,
+                    p1: float(p1-(numerador/denominador)),
+                    xk: endcons(p1,xk),
+
+                    erros: endcons(erro(p0, p1), erros)
+               ),
+
+               /* Comentário (A12) */
+               M: matrix(k, xk, erros), M:transpose(M),
+
+               /* Comentário (A13) */
+               M: addrow(cabecalho, M), print(M), print(""),
+
+               print("Donde ", %xi, " ≃ " , p1)
+
+          )$
+
+/*   :::::::::::::::::::::::::::::::::::::::: METÓDO REGULA FALSI OU MÉTODO DA FALSA POSIÇÃO :::::::::::::::::::::::::::::::::::::::: */
+
+/*   COMENTÁRIOS E ALGORITMO */
+
+
+      /* (D1)
+       * A SEGUINTE CONDIÇÃO ESTABELECE NOSSO CRITÉRIO DE PARADA.
+       *******************************************************************/
+
+
+      /* (D2)
+       * AQUI ESTÁ O GRANDE TRUNFO DO MÉTODO, POIS AS SEGUINTES CONDIÇÕES 
+       * IRÁ NOS GARANTIR QUE A RAIZ QUE PROCURAMOS ESTEJA SEMPRE DENTRO
+       * DOS NOVOS INTERVALOS, NUNCA ULTRAPASSANDO OS 
+       * MESMOS, COMO OCORRIA POR EXEMPLO NO MÉTODO DE NEWTON, OU SEJA, O
+       * MÉTODO DA FALSA POSIÇÃO ASSEGURA DESTA FORMA QUE A RAIZ CONTINUE
+       * ISOLADA ENTRE DOIS PONTOS RETENDO O PONTO NO QUAL O VALOR DA 
+       * FUNÇÃO TEM SINAL OPOSTO NO PONTO MAIS RECENTE.
+       *******************************************************************/
+
+
+regulaFalsi(f, limitante, a, b):=
+     block(
+               [ 
+                    /* Comentário (A1) */
+                    k:[], xk:[], erros:[], 
+
+                    /* Comentário (A4) */       
+                    cabecalho: matrix(['k, x['k], abs('x['k]-'x['k-1])])
+               ],
+               print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+
+               /* Comentário (A5) */
+               if f(a) * f(b) > 0 then 
+               (
+                    print("O procedimento não foi bem sucedido pois, f(a) e f(b) tem mesmo sinal"),
+                    print("f(a) = ",f(a)),
+                    print("f(b) = ",f(b)),
+                    return (false)
+               ),
+
+               /* Comentário (C1) */
+               print(""),
+               print("Por definição temos que os limites do intervalo [a,b] definem nossos", 'x['k],"'s", "iniciais, desse modo, temos:"),
+               print("   ---> ", 'x[0],"= a = ", a),
+               print("   ---> ", 'x[1],"= b = ", b),
+               print("Por efeito, constituindo a seguinte tabela: "),
+               print(""),
+
+               /* Comentário (A9) */
+               erro(a,b):= abs(b-a),
+
+               i:2,
+               do 
+               (
+                    k: endcons(i, k),
+                    i: i+1,
+
+                    /* Comentário (C2) */
+                    numerador: float(f(b)*(b-a)),
+                    denominador:float(f(b)-f(a)),
+
+                    xk: endcons(b-numerador/denominador, xk),
+                    erros: endcons(erro(b, last(xk)), erros),
+                    
+
+                    /* Comentário (D1) */
+                    if last(erros) <= limitante then
+                         return(),
+
+                    /* Comentaŕio (D2) */
+                    if f(last(xk)) * f(a) < 0 then
+                         b: last(xk)
+                    else
+                         a: b, b: last(xk)
+                ),
+               
+               /* Comentário (A12) */
+               M: matrix(k, xk, erros), M:transpose(M),
+
+               /* Comentário (A13) */
+               M: addrow(cabecalho, M), print(M), print(""),
+
+               print("Donde ", %xi, " ≃ " , last(xk))
+
+          )$
+
+/*METODO DO PONTO FIXO*/
+
+/*Se nao ha pontos criticos de F, usa-se este procedimento:*/
+
+extremos(F,a,b):=block(if(min(F(a),F(b))<a and max(F(a),F(b))>b) then print("O método do ponto fixo não é satisfeito, pois para algum x no intervalo", [a,b],",", 
+                "F(x) não pertence ao intervalo",  [a,b],",", "pois", 'F(a)=F(a),"e",'F(b)=F(b),".")
+        else(print("A condição", a,"<=",'F(x),"<=",b,  "é satisfeita para todo x em", [a,b],"."),
+    terceiracondicao(F,a,b)))$
+
+/*Se  ha pontos criticos de F, usa-se este procedimento:*/
+
+interior(F,a,b):=block(
+        n:create_list(subst(rhs(m[i]),x,F(x)),i,1,length(m)),
+    n1:[F(a),F(b)],
+    n2:join(n,n1),
+    if(lmin(n2)<a or lmax(n2)>b) then print("O método do ponto fixo não é satisfeito, pois para algum x no intervalo", [a,b],",", 
+                "F(x) não pertence ao intervalo", [a,b],",", "pois", 'F(a)=F(a),"e",'F(b)=F(b),".")
+        else(print("A condição", a,"<=",'F(x),"<=",b,  "é satisfeita para todo x em", [a,b],"."),
+    terceiracondicao(F,a,b)))$
+
+    /*Se  o conjunto dos pontos criticos de F nao e´ vazio, usa-se este procedimento:*/
+
+    teste1(F,a,b):=block(m:solve(diff(F(x),x,1)=0),
+    m1:create_list(rhs(m[i]),i,1,length(m)),
+    for i:1 thru length(m1) do (if (abs(b-m1[i])>abs(b-a)) then (extremos(F,a,b)) else (interior(F,a,b))))$
+
+/* O procedimento final que verifica as condicoes do ponto fixo e´ :*/
+
+teste(F,a,b):=block(m:solve(diff(F(x),x,1)=0),
+    m1:create_list(rhs(m[i]),i,1,length(m)),
+(if is(length(m1)=0) then print(interior(F,a,b)) else print(teste1(F,a,b))))$
+
+/*Terceira condicao do metodo do ponto fixo*/
+
+terceiracondicao(F,a,b):=block(
+               define(g(x),diff(F(x),x,1)),
+l: solve(diff(F(x),x,2)=0),
+        iterations:0,
+        for i:1 thru length(l) do (if(rhs(l[i])>=a and rhs(l[i])<=b) then(
+                       'll[i]=ll[i]:rhs(l[i]), iterations:iterations+1
+)else ('ll[i]=ll[i]:0)
+
+),
+        u:makelist(ll[i],i,iterations),
+                       j: create_list(at(abs(g(x)),x=u[i]),i,1,length(u)),
+               print(""),
+
+if (lmax(j) >= 1) then(print(" "),
+                    print("O método do ponto fixo não é satisfeito, pois |F'(x)|>=1, para algum x em", [a,b],".", "Tente outra função de iteração F(x).")
+                    
+               ) else( 
+                print("A condição |F'(x)|<1 é satisfeita para todo x no intervalo", "(",a,",",b,")","."),
+    recursiva(F,limitante,a,b,x0)))$
+
+    /*algoritmo do ponto fixo*/
+
+    recursiva(F,limitante,a,b,x0):=block( [ k:[0], xk:[x0], erros:[~] ],
+ratprint:false,
+    
+               cabecalho: matrix(['k, x['k], abs('x['k]-'x['k-1])]),
+
+
+               print(""),
+
+               print("Dos dados informados obtemos a seguinte tabela: "),
+               print(""),
+
+               erro(a,b):= abs(b-a),
+
+               xk: endcons(float(F(x0)), xk),
+               k: endcons(1, k),
+               i : 2,
+               do
+               (
+                    erros: endcons(erro(xk[i-1], xk[i]), erros),
+
+                    if (last(erros) <= limitante) then
+                         return(),
+
+                    k: endcons(i, k),
+                    xk: endcons(float(F(xk[i])), xk),
+                    i: i+1
+               ),
+
+
+               M: matrix(k, xk, erros), M:transpose(M),
+
+               M: addrow(cabecalho, M), print(M), print(""),
+
+               print("Donde ", %xi, " ~= " , last(xk),"."))$
+
+/*Procedimento que agrega os apresentado acima:*/
+pontoFixo(F,limitante,a,b,x0):=block(
+     print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+          
+               /* Comentário (C1) */
+               print(""),
+teste(F,a,b))$
+
+/*   ::::::::::::::::::::::::::::::::::::::::::::::::::::: GRÁFICO DOS MÉTODOS  ::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+graficoBissec(f,a,b):= block(
+    dados:submatrix(1,M,1,2,3,4,5,7,8),
+    grafico(f,a,b,dados,"Metodo da Bisseccao")
+)$
+
+graficoSecante(f,a,b):= block(
+    dados:submatrix(1,M,1),
+    grafico(f,a,b,dados,"Metodo da Secante")
+)$
+
+graficoNewton(f,a,b):= block(
+    dados:submatrix(1,M,1),
+    grafico(f,a,b,dados,"Metodo do Newton")
+)$
+
+graficoRegulaFalsi(f,a,b):= block(
+    dados:submatrix(1,M,1),
+    grafico(f,a,b,dados,"Metodo Regula Falsi")
+)$
+
+graficoPontofixo(f,a,b):= block(
+    dados:submatrix(1,M,1),
+    grafico(f,a,b,dados,"Metodo do Ponto Fixo")
+)$
+
+grafico(f,a,b,dados,titulo):=
+     block(
+    smallest_matrix_element(m) := lmin(map('lmin, abs(args(m)))),
+    largest_matrix_element(m) := lmax(map('lmax, abs(args(m)))),
+imagens:makelist([dados[i,1],f(dados[i,1])],i,1,length(dados)),
+plot2d([[discrete, imagens], f(x)], [x,    a,    b],
+        [style, points, lines], [color, red, blue],
+        [point_type, asterisk],
+        [yx_ratio, 1], [axes, true],
+        [legend, "Aproximacoes", "funcao f(x)"],[title,titulo])
+          )$
+
+
+/* ::::::::::::::::::::::::::::::::::::::::::::*/
+
+interpgeom(F,x0,p0,p1):=block(load("dynamics"),
+                staircase(F(x),  x0, 4, [x, p0, p1]))$
+

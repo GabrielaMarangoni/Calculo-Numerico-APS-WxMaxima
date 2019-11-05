@@ -1,0 +1,241 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.12.0 ] */
+
+/* [wxMaxima: comment start ]
+Universidade Tecnológica Federal do Paraná
+Wellington José Corrêa
+Cálculo Numérico
+Solução de Sistemas Lineares
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Solução de Sistemas Lineares
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+Primeiramente, como feito nas listas anteriores, devemos carregar um pacote de extensão .mac que contém todos os algoritmos dos métodos descritos 
+a seguir, a saber, "linear_system.mac" (lembre-se que você deve ir em Arquivo/Carregar pacote... e procurar o arquivo 
+"linear_system.mac").
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("/home/welljc/Dropbox/tex/Cálculo numérico/métodos prontos/Sistemas lineares/linear_system.mac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Métodos Diretos
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: subsect start ]
+Método de Cholesky
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+O procedimento a ser usado é 
+Cholesky(A,B)$
+
+Exemplo: Resolva o sistema linear A*X=B dado pelas matrizes abaixo:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix([4,2,-4],[2,10,4],[-4,4,9]); 'B=B:matrix([0, 6, 5]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Assim, usando o procedimento acima, temos:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Cholesky(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Se tivéssemos escolhido a matriz A como sendo
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix([4,2,-4],[-2,10,4],[-4,4,9]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+teríamos
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Cholesky(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+uma vez que a matriz A não é simétrica. Agora, se considerarmos
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+A:matrix([1,0,-3],[0,1,8],[-3,8,4]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Cholesky(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+uma vez que escolhemos uma matriz A que não é positiva definida.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: subsect start ]
+Decomposição em LU
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+Aqui o procedimento é 
+LU(A,B)$
+Exemplo: Usando o método de decomposição LU, resolva o sistema linear A*X=B onde A e B são matrizes dadas a seguir:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix([5,2,1],[-1,4,2],[2,-3,10]); 'B=B:matrix([-12, 20, 3]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+LU(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Agora, se escolhermos uma matriz com algum menor principal nulo, por exemplo,
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix([5,2,3,4],[1,1,1,2],[4,1,2,0],[4,3,2,1]); 'B=B:matrix([1,2,3,4]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+LU(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: subsect start ]
+Método de Eliminação de Gauss com pivotamento parcial 
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+O procedimento é 
+
+Gauss_parcial(A,B)$
+
+Exemplo: Resolva o seguinte sistema abaixo onde as matrizes A e B são dadas a seguir:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix([1,2,3],[3,1,0],[0,3,4]); 'B=B:matrix([3, 4, 3]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Assim,
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gauss_parcial(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Métodos iterativos
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: subsect start ]
+Norma de Matriz
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+Os procedimentos abaixo nos dão respectivamente, a norma linha, norma coluna e a norma euclidiana de uma matriz A:
+
+norma_linha(A)$
+norma_coluna(A)$
+norma_euclidiana(A)$
+
+Exemplo: Dada a matriz A, obtenha a norma linha, norma coluna e a norma euclidiana desta matriz.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix( [3,-5,7], [1,-2,4], [-8,1,-7]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Deste modo,
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+norma_linha(A)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+norma_coluna(A)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+norma_euclidiana(A)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: subsect start ]
+Método de Gauss Jacobi
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+Usaremos o seguinte procedimentos que
+
+(i) verifica se a matriz A é estritamente diagonalmente dominante e se os critérios da linha e da coluna são satisfeitos 
+para a matriz F, onde F_ij=0 se i=j e F_ij=-A_ij*[A_ii]^(-1):
+
+(ii) Uso do método de Gauss-Jacobi para resolver o sistema A*X=B dados X0 e tolerância 'epsilon':
+
+
+GaussJacobi(A,B,X0,epsilon)$
+
+Exemplo: Utilize o método de Gauss - Jacobi para resolver o sistema A*X=B com X0=[0,0,0]^t e 'epsilon=10^(-2)'.
+
+Solução: 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix([10,2,1],[1,5,1],[2,3,10]); 'B=B:[14, 11, 8]; 'X0=X0:[0,0,0];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Vejamos se o algoritmo descrito nos permitirá usar  o método iterativo de Gauss-Seidel: 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+GaussJacobi(A,B,X0,1e-2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: subsect start ]
+Método de Gauss - Seidel
+   [wxMaxima: subsect end   ] */
+
+/* [wxMaxima: comment start ]
+Como na seção anterior, usaremos o procedimento com o intuito:
+
+(i) Verificar se a matriz A é estritamente diagonalmente dominante e se os critérios de Sanssenfeld, da linha para matriz F
+e da coluna para a matriz F são satisfeitos, onde a matriz F, onde F_ij=0 se i=j e F_ij=-A_ij*[A_ii]^(-1):
+
+
+(ii) Uso do método de Gauss-Seidel para resolver o sistema A*X=B dados X0 e tolerância 'epsilon':
+
+GaussSeidel(A,B,X0,epsilon)$
+
+Exemplo: Utilize o método de Gauss - Jacobi para resolver o sistema A*X=B com X0=[0,0,0]^t e 'epsilon=10^(-2)'.
+
+Solução:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+'A=A:matrix([5,1,1],[3,4,1],[3,3,6]); 'B=B:[5, 6, 0]; 'X0=X0:[0,0,0];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Vamos checar se é possível empregar o método iterativo de Gauss - Seidel:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+GaussSeidel(A,B,X0,1e-2)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
