@@ -1,0 +1,293 @@
+Trapezio(f,a,b):=block([integral],
+    kill(A,F,F1),
+n:1,
+    ratprint:false,
+    print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+    h:(b-a)/n,
+    print("O valor de h é ", h),
+print(" "),
+    print("Tabela de pontos:"),
+   A:matrix([x,'f(x)]),
+    F1:[[a,f(a)],[b,f(b)]], 
+    F2:apply(matrix,F1),
+    print(transpose(addrow(A,F2))),
+    print(" "),
+integral:float((h/2)*(f(a)+f(b))),
+print("  Pela Regra do Trapézio, temos que a integral",
+         'integrate(f(x),x,a,b), "é aproximadamente", box(integral)),
+    print(" "),
+    print("Como comparação, o valor exato da integral", 'integrate(f(x),x,a,b), "é", float(integrate(f(x),x,a,b)))
+
+)$
+
+graficotrap(f,a,b,n):=block(delx:(b-a)*n^(-1),
+x(i):= if i=0 then a else a+delx*i,
+ TRAPEZOIDS:makelist(polygon([ [x(i-1),0], [x(i),0],
+[x(i),f(x(i))], [x(i-1),f(x(i-1))] ]),i,1,20),
+wxdraw2d(
+grid=true,
+xaxis=true,
+yaxis=true,
+yrange=[a-1,b+1],
+xrange=[a,b],
+color=black,
+border=true,
+fill_color=red,
+TRAPEZOIDS,
+explicit(f(x),x,a-1,b+1)
+)
+)$
+
+est_trap(f,a,b):=block(kill(E),
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+h:(b-a),
+define(s(x),factor(diff(f(x),x,2))), 
+x(i):= if i=0 then a else a+h*i,
+j:create_list(ev(abs(s(x)),x=x(i)),i,0,1),
+M:lmax(j),
+print("Limitante:"),
+
+print('abs(E)<=(E):(b-a)^3/(12)*M))$
+
+Trapezio_Generalizada(f,a,b,n):=block([integral],
+    kill(A,F,F1),
+    ratprint:false,
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+    h:(b-a)/n,
+    print("O valor de h é ", h),
+print(" "),
+    print("Tabela de pontos:"),
+    x[0]:a,
+    for i:0 thru n-1 do (x[i+1]:x[i]+h),
+     A:matrix([x,'f(x)]),
+    F1:makelist([float(x[i]),float(f(x[i]))],i,0,n),
+    F2:apply(matrix,F1),
+    print(transpose(addrow(A,F2))),
+    print(" "),
+xi:makelist(a+i*(b-a)/n,i,0,n),
+yi:makelist(f(xi[i+1]),i,0,n),
+ci:makelist(if i=0 or i=n then (1) else 2,i,0,n),
+integral:float((h/2)*sum(ci[i+1]*yi[i+1],i,0,n)),
+print("  Pela Regra dos Trapézios generalizada, temos que a integral",
+         'integrate(f(x),x,a,b), "para ", 'n=n, "é aproximadamente", box(integral)),
+    print(" "),
+    print("Como comparação, o valor exato da integral", 'integrate(f(x),x,a,b), "é", float(integrate(f(x),x,a,b)))
+
+)$
+
+est_trapgen(f,a,b,n):=block(kill(E),
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+h:(b-a)/n,
+define(s(x),factor(diff(f(x),x,2))), 
+x(i):= if i=0 then a else a+h*i,
+j:create_list(ev(abs(s(x)),x=x(i)),i,0,n),
+M:lmax(j),
+print("Limitante:"),
+
+print('abs(E)<=(E):float(h^2*(b-a)/(12)*M)))$
+
+Simpson13(f,a,b,n):=block([integral],
+    kill(A,F,F1),
+    ratprint:false,
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+    h:(b-a)/n,
+    print("Temos que  ", 'h=h),
+    print(" "),
+    print("Tabela de pontos:"),
+    print(" "),
+    x[0]:a,
+    for i:0 thru n-1 do (x[i+1]:x[i]+h),
+     A:matrix([x,'f(x)]),
+    F1:makelist([float(x[i]),float(f(x[i]))],i,0,n),
+    F2:apply(matrix,F1),
+    print(transpose(addrow(A,F2))),
+    print(" "),
+
+xi:makelist(a+i*(b-a)/n,i,0,n),
+yi:makelist(f(xi[i+1]),i,0,n),
+ci:makelist(if i=0 or i=n then (1) else if floor(i/2)=i/2 then 2 else 4,i,0,n),
+integral:float((h/3)*sum(ci[i+1]*yi[i+1],i,0,n)),
+print("  Pela Regra 1/3 de Simpson, temos que a integral",
+         'integrate(f(x),x,a,b), "para ", 'n=n, "é aproximadamente", box(integral)),
+    print(" "),
+    print("Como comparação, o valor exato da integral", 'integrate(f(x),x,a,b), "é", float(integrate(f(x),x,a,b)))
+
+)$
+
+est_Simpson13(f,a,b,n):=block(kill(E),
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+h:(b-a)/n,
+define(s(x),factor(diff(f(x),x,4))), 
+x(i):= if i=0 then a else a+h*i,
+j:create_list(ev(abs(s(x)),x=x(i)),i,0,n),
+M:lmax(j),
+print("Limitante:"),
+
+print('abs(E)<=(E):float(h^5*n/(180)*M)))$
+
+Simpson38(f,a,b,n):=block([integral],
+    kill(A,F,F1),
+    ratprint:false,
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+    if is(mod(n,3)=0) then (
+    h:(b-a)/n,
+    print("Temos que  ", 'h=h),
+    print(" "),
+    print("Tabela de pontos:"),
+    print(" "),
+    x[0]:a,
+    for i:0 thru n-1 do (x[i+1]:x[i]+h),
+     A:matrix([x,'f(x)]),
+    F1:makelist([float(x[i]),float(f(x[i]))],i,0,n),
+    F2:apply(matrix,F1),
+    print(transpose(addrow(A,F2))),
+    print(" "),
+
+xi:makelist(a+i*(b-a)/n,i,0,n),
+yi:makelist(f(xi[i+1]),i,0,n),
+ci:makelist(if i=0 or i=n then (1) else if floor(i/3)=i/3 then 2 else 3,i,0,n),
+    integral:float((3*h/8)*sum(ci[i+1]*yi[i+1],i,0,n)),
+print("  Pela Regra 3/8 de Simpson, temos que a integral",
+         'integrate(f(x),x,a,b), "para ", 'n=n, "é aproximadamente", box(integral)),
+    print(" "),
+    print("Como comparação, o valor exato da integral", 'integrate(f(x),x,a,b), "é", float(integrate(f(x),x,a,b)))
+
+) else print("O método 3/8 de Simpson não aplicável pois n não é múltiplo de 3."))$
+
+est_Simpson38(f,a,b,n):=block(kill(E),
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+h:(b-a)/n,
+define(s(x),factor(diff(f(x),x,4))), 
+x(i):= if i=0 then a else a+h*i,
+j:create_list(ev(abs(s(x)),x=x(i)),i,0,n),
+M:lmax(j),
+print("Limitante:"),
+
+print('abs(E)<=(E):float(h^5*n/(80)*M)))$
+
+Simpson_tabela13(a,b,n,y):=block([integral],
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+h:(b-a)/(n),
+ci:makelist(if i=0 or i=n then (1) else if floor(i/2)=i/2 then 2 else 4,i,0,n),
+integral:0,
+for i:0 thru n do (
+integral:integral+(h/3)*(ci[i+1]*y[i+1])),
+print("  O valor da integral é aproximadamente ",box(integral)))$
+
+Simpson_tabela38(a,b,n,y):=block([integral],
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+h:(b-a)/(n),
+ci:makelist(if i=0 or i=n then (1) else if floor(i/3)=i/3 then 2 else 3,i,0,n),
+integral:0,
+for i:0 thru n do (
+integral:integral+(3*h/8)*(ci[i+1]*y[i+1])),
+print("  O valor da integral é aproximadamente ",box(integral)))$
+
+graficoSimpson(f,x0,xn,n):=block(kill(a,b,c), 
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+GENEQN:Y=a*X^2+b*X+c,
+delx:(xn-x0)/n,
+define(x(i), x0+delx*i),
+ EQN(i):=(sublis([X=x(i),Y=f(x(i))],GENEQN)),
+COEFFS1:float(solve([EQN(0),EQN(1),EQN(2)],[a,b,c])),
+PARABOLA1:rhs(sublis(COEFFS1[1],GENEQN)),
+ COEFFS2:float(solve([EQN(2),EQN(3),EQN(4)],[a,b,c])),
+ PARABOLA2:rhs(sublis(COEFFS2[1],GENEQN)),
+COEFFS3:float(solve([EQN(4),EQN(5),EQN(6)],[a,b,c])),
+PARABOLA3:rhs(sublis(COEFFS3[1],GENEQN)),
+wxdraw2d(
+grid=false,
+xaxis=true,
+yaxis=true,
+xrange=[x0-1,xn+1],
+yrange=[f(x0-1)-2,f(xn+1)+1],
+title="f(x)  com as tres parabolas interpoladoras",
+key="f(x)",
+color=black,
+line_width=3,
+explicit(f(x),x,x0,xn),
+
+color=red,
+line_width=2.5,
+key="Parabola 1",
+explicit(PARABOLA1,X,x(0)-.4,x(2)+.4),
+color=dark_green,
+key="Parabola 2",
+explicit(PARABOLA2,X,x(2)-.4,x(4)+.4),
+color=blue,
+key="Parabola 3",
+explicit(PARABOLA3,X,x(4)-.4,x(6)+.4)
+)
+)$
+
+Legendre2(f,a,b):=block(kill(x,c,v,L),
+x[1]:0.577350269189626,
+x[2]:-0.577350269189626,
+c[1]:1, c[2]:1,
+v[i]:=((b-a)*x[i]+a+b)*2^-1,
+print("O valor aproximado da integral", 'integrate(f(x),x,a,b), "é"," ", box((b-a)/2*sum(c[i]*f(v[i]),i,1,2)))
+)$
+
+Legendre3(f,a,b):=block(kill(x,c,v,L),
+x[1]:0.774596669241483,
+x[2]:0,
+x[3]:-0.774596669241483,
+c[1]:0.555555555555556, c[2]:.888888888888889,c[3]:.555555555555556,
+v[i]:=((b-a)*x[i]+a+b)*2^-1,
+L:(b-a)/2*sum(c[i]*f(v[i]),i,1,3),
+print("O valor aproximado da integral", 'integrate(f(x),x,a,b), "é"," ", box(L)))$
+
+Legendre4(f,a,b):=block(kill(x,c,v,L),
+x[1]:0.861136311594053,
+x[2]:0.339981043584856,
+x[3]:-0.339981043584856,
+x[4]:-0.861136311594053,
+c[1]: 0.347854845137454, c[2]: 0.652145154862546,c[3]: 0.652145154862546,c[4]: 0.347854845137454,
+v[i]:=((b-a)*x[i]+a+b)*2^-1,
+print("O valor aproximado da integral", 'integrate(f(x),x,a,b), "é"," ", box((b-a)/2*sum(c[i]*f(v[i]),i,1,4)))
+)$
+
+Legendre5(f,a,b):=block(kill(x,c,v,L),
+x[1]:.90617984593866,
+x[2]:0.538469310105683,
+x[3]:0,
+x[4]:-0.538469310105683,
+x[5]:-.90617984593866,
+c[1]:0.236926885056189, c[2]:.478628670499366,c[3]:0.568888888888889,c[4]:.478628670499366,c[5]:0.236926885056189,
+v[i]:=((b-a)*x[i]+a+b)*2^-1,
+print("O valor aproximado da integral", 'integrate(f(x),x,a,b), "é"," ", box((b-a)/2*sum(c[i]*f(v[i]),i,1,5)))
+)$
+
+quadGauss(f,a,b,n):=block(
+print(""),
+print("Diretório:", maxima_tempdir), print("Data e hora atual:", timedate()),
+             print(""),
+
+if n < 2 or n > 5 then print("Intervalo não calculavel. Por favor escolha um intervalo entre 2 e 5."),
+if n=2 then return(Legendre2(f,a,b)),
+if n=3 then return(Legendre3(f,a,b)),
+if n=4 then return(Legendre4(f,a,b)),
+if n=5 then return(Legendre5(f,a,b))
+)$
